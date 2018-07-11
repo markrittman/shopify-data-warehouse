@@ -1,4 +1,4 @@
-connection: "shopify_test"
+connection: "cp_shopify_data_warehouse"
 
 include: "*.view.lkml"
 include: "*.dashboard.lookml"
