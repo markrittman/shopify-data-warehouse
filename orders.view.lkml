@@ -1,15 +1,7 @@
 # Docs here: https://help.shopify.com/api/data-warehouse/schema-reference/orders
 
 view: orders {
-  derived_table: {
-    sql:
-    select
-        *,
-        row_number() over (partition by customer_id order by processed_at) as order_index
-      from shopify.orders
-
-    ;;
-  }
+  sql_table_name: shopify.orders ;;
 
   # IDs -------------------------------------------------------------------
 
