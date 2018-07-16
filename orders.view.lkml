@@ -7,10 +7,43 @@ view: orders {
 
   dimension: order_id {
     primary_key: yes
-    hidden: yes
     type: number
     sql: ${TABLE}.order_id ;;
     group_label: "IDs"
+
+   # this is the email example from our demo environment
+    link: {
+      label: "User Lookup Dashboard"
+      url: "http://demo.looker.com/dashboards/160?Email={{ value | encode_uri }}"
+      icon_url: "http://www.looker.com/favicon.ico"
+    }
+    action: {
+      label: "Email Promotion to Customer"
+      url: "https://desolate-refuge-53336.herokuapp.com/posts"
+      icon_url: "https://sendgrid.com/favicon.ico"
+      # param: {
+      #   name: "some_auth_code"
+      #   value: "abc123456"
+      # }
+      form_param: {
+        name: "Subject"
+        required: yes
+        default: "Thank you {{ users.name._value }}"
+      }
+      form_param: {
+        name: "Body"
+        type: textarea
+        required: yes
+        default:
+        "Dear {{ users.first_name._value }},
+
+        Thanks for your loyalty to SEED Beauty.  We'd like to offer you a 10% discount
+        on your next purchase!  Just use the code LOYAL when checking out!
+
+        Your friends at SEED Beauty"
+      }
+    }
+    required_fields: [customers.full_name, customers.first_name]
   }
 
   dimension: billing_address_id {

@@ -1,16 +1,16 @@
 view: order_fact {
   derived_table: {
     sql:
-    select
-          orders.order_id
-        , row_number() over (partition by customer_id order by processed_at) as order_index
-      from shopify.orders ;;
+    SELECT   orders.order_id
+           , row_number() over (partition by customer_id order by processed_at) as order_index
+    FROM shopify.orders ;;
     # sortkeys: ["order_id"]
     # distribution: "order_id"
   }
 
   dimension: order_id {
     type: number
+    hidden: yes
     sql: ${TABLE}.order_id ;;
   }
 
