@@ -10,6 +10,8 @@ named_value_format: local_currency {
 explore: customers {}
 
 explore: sales {
+  # label: ""
+  description: "this explore shows x"
   always_filter: {
     filters: {
       field: test
@@ -25,6 +27,13 @@ explore: sales {
     sql_on: ${sales.order_id} = ${orders.order_id} ;;
     type: inner
     relationship: many_to_one
+  }
+
+  join: order_fact {
+    view_label: "Orders"
+    sql_on: ${orders.order_id} = ${order_fact.order_id} ;;
+    type: left_outer
+    relationship: one_to_one
   }
 
   join: products {

@@ -31,6 +31,11 @@ view: customers {
     sql: ${TABLE}.last_name ;;
   }
 
+  dimension: full_name {
+    type: string
+    sql: ${first_name} || ' ' || ${last_name} ;;
+  }
+
   dimension: email {
     type: string
     sql: ${TABLE}.email ;;
