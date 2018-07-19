@@ -10,8 +10,14 @@ named_value_format: local_currency {
 explore: customers {}
 
 explore: sales {
-  # label: ""
-  description: "this explore shows x"
+  label: "Sales, Orders, Customers & Products"
+  description: "This explore includes information about Sales, Orders, Products & Customers"
+
+# access_filter: {
+#   field: customers.country
+#     user_attribute: allowed_country
+#   }
+
   always_filter: {
     filters: {
       field: test
