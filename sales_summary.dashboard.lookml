@@ -31,7 +31,7 @@
     title: 'New or Repeating Users'
     type: field_filter
     explore: sales
-    field: orders.new_vs_repeat
+    field: order_fact.new_vs_repeat
     default_value: 'new'
 
   elements:
@@ -93,7 +93,7 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
 
   - name: total_revenue
@@ -154,7 +154,7 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
   - name:  total_customers
     title: Total Customers
@@ -214,7 +214,7 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
   - name: items_per_order
     title: Avg Items per Order
@@ -279,7 +279,7 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
   - name: avg_order_value
     title: Avg Order Value
@@ -343,7 +343,7 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
   - name: avg_customer_value
     title: Avg Customer Value
@@ -408,7 +408,7 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
   - name: sales_and_orders_over_time
     title: Sales & Orders Over Time
@@ -459,7 +459,7 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
 
   - name: avg_order_value_over_time
@@ -488,7 +488,7 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
   - name: top_products_units
     title: Top Products by Units Sold
@@ -545,7 +545,7 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
   - name: top_products_gross
     title: Top Products by Gross Sale
@@ -602,15 +602,15 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
 
   - name: new_vs_repeat_pie
     title: New vs Repeat Customers
     model: shopify
     explore: sales
     type: looker_pie
-    fields: [orders.new_vs_repeat, orders.count_customers]
-    sorts: [orders.new_vs_repeat desc]
+    fields: [order_fact.new_vs_repeat, orders.count_customers]
+    sorts: [order_fact.new_vs_repeat desc]
     limit: 500
     column_limit: 50
     value_labels: legend
@@ -653,10 +653,10 @@
     model: shopify
     explore: sales
     type: looker_line
-    fields: [orders.count, orders.processed_month, orders.new_vs_repeat]
-    pivots: [orders.new_vs_repeat]
+    fields: [orders.count, orders.processed_month, order_fact.new_vs_repeat]
+    pivots: [order_fact.new_vs_repeat]
     fill_fields: [orders.processed_month]
-    sorts: [orders.processed_month desc, orders.new_vs_repeat]
+    sorts: [orders.processed_month desc, order_fact.new_vs_repeat]
     limit: 500
     stacking: ''
     show_value_labels: false
@@ -696,7 +696,7 @@
     model: shopify
     explore: sales
     type: looker_column
-    fields: [orders.avg_order_value, orders.new_vs_repeat, orders.count, sales.order_items]
+    fields: [orders.avg_order_value, order_fact.new_vs_repeat, orders.count, sales.order_items]
     sorts: [orders.avg_order_value desc]
     limit: 500
     column_limit: 50
@@ -770,4 +770,4 @@
     listen:
       date_range: orders.processed_month
       shop_name: shops.shop_name
-      new_or_repeat: orders.new_vs_repeat
+      new_or_repeat: order_fact.new_vs_repeat
