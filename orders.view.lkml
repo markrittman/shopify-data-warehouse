@@ -13,8 +13,8 @@ view: orders {
 
    # this is the email example from our demo environment
     link: {
-      label: "User Lookup Dashboard"
-      url: "http://demo.looker.com/dashboards/160?Email={{ value | encode_uri }}"
+      label: "Go to Shopify"
+      url: "https://colourpop-prd.myshopify.com/admin/orders/{{ value | encode_uri }}"
       icon_url: "http://www.looker.com/favicon.ico"
     }
     action: {
