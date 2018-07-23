@@ -36,6 +36,13 @@ explore: sales {
     relationship: one_to_one
   }
 
+  join: order_categorization {
+    view_label: "Orders"
+    sql_on: ${orders.order_id} = ${order_categorization.order_id} ;;
+    type: left_outer
+    relationship: one_to_one
+  }
+
   join: products {
     sql_on:  ${sales.product_id} = ${products.product_id} ;;
     type: left_outer
@@ -52,6 +59,20 @@ explore: sales {
     sql_on: ${orders.customer_id} = ${customers.customer_id} ;;
     type:  left_outer
     relationship: many_to_one
+  }
+
+  join: shipping_addresses {
+    from: addresses
+    sql_on: ${shipping_addresses.address_id} = ${sales.shipping_address_id} ;;
+    type: left_outer
+    relationship: one_to_one
+  }
+
+  join: billing_addresses {
+    from: addresses
+    sql_on: ${billing_addresses.address_id} = ${sales.shipping_address_id} ;;
+    type: left_outer
+    relationship: one_to_one
   }
 }
 
