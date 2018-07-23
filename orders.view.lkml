@@ -196,18 +196,20 @@ view: orders {
     group_label: "Other"
   }
 
-  dimension: order_index {
-    type: number
-    sql: ${TABLE}.order_index ;;
-    value_format_name: decimal_0
-    group_label: "Other"
-  }
+###### These were moved into the order_fact table that we built ######
 
-  dimension: new_vs_repeat {
-    type: string
-    sql: case when ${order_index} = 1 then 'new' else 'repeat' end ;;
-    group_label: "Other"
-  }
+#   dimension: order_index {
+#     type: number
+#     sql: ${TABLE}.order_index ;;
+#     value_format_name: decimal_0
+#     group_label: "Other"
+#   }
+
+#   dimension: new_vs_repeat {
+#     type: string
+#     sql: case when ${order_index} = 1 then 'new' else 'repeat' end ;;
+#     group_label: "Other"
+#   }
 
   # Measures -------------------------------------------------------------------
 
