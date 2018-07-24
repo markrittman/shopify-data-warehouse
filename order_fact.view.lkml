@@ -19,6 +19,12 @@ view: order_fact {
     sql: ${TABLE}.order_index ;;
   }
 
+  dimension: new_vs_repeat {
+    type: string
+    sql: case when ${order_index} = 1 then 'new' else 'repeat' end ;;
+    group_label: "Other"
+  }
+
 
   # # You can specify the table name if it's different from the view name:
   # sql_table_name: my_schema_name.tester ;;

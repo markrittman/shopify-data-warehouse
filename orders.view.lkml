@@ -13,8 +13,8 @@ view: orders {
 
    # this is the email example from our demo environment
     link: {
-      label: "User Lookup Dashboard"
-      url: "http://demo.looker.com/dashboards/160?Email={{ value | encode_uri }}"
+      label: "Go to Shopify"
+      url: "https://colourpop-prd.myshopify.com/admin/orders/{{ value | encode_uri }}"
       icon_url: "http://www.looker.com/favicon.ico"
     }
     action: {
@@ -28,14 +28,14 @@ view: orders {
       form_param: {
         name: "Subject"
         required: yes
-        default: "Thank you {{ users.name._value }}"
+        default: "Thank you {{ value }}"
       }
       form_param: {
         name: "Body"
         type: textarea
         required: yes
         default:
-        "Dear {{ users.first_name._value }},
+        "Dear {{ orders.customer_id._value }},
 
         Thanks for your loyalty to SEED Beauty.  We'd like to offer you a 10% discount
         on your next purchase!  Just use the code LOYAL when checking out!
@@ -196,18 +196,20 @@ view: orders {
     group_label: "Other"
   }
 
-  dimension: order_index {
-    type: number
-    sql: ${TABLE}.order_index ;;
-    value_format_name: decimal_0
-    group_label: "Other"
-  }
+###### These were moved into the order_fact table that we built ######
 
-  dimension: new_vs_repeat {
-    type: string
-    sql: case when ${order_index} = 1 then 'new' else 'repeat' end ;;
-    group_label: "Other"
-  }
+#   dimension: order_index {
+#     type: number
+#     sql: ${TABLE}.order_index ;;
+#     value_format_name: decimal_0
+#     group_label: "Other"
+#   }
+
+#   dimension: new_vs_repeat {
+#     type: string
+#     sql: case when ${order_index} = 1 then 'new' else 'repeat' end ;;
+#     group_label: "Other"
+#   }
 
   # Measures -------------------------------------------------------------------
 

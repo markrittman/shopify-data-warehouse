@@ -75,4 +75,14 @@ view: addresses {
     sql: ${TABLE}.zip ;;
   }
 
+  # CP defined geographical zones of interest
+  # The three zones have the numbers 1, 2 and 4 for each order such that we can add them and always have a unique number.
+  # e.g. if a customer shipped to the USA and to China, then they'll have the number 3.
+  dimension: zone {
+    type: number
+    sql: case
+      when ${TABLE}.country = 'United States' then 1
+      when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 2
+      else 4 end ;;
+  }
 }
