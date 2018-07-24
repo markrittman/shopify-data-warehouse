@@ -1,12 +1,8 @@
 view: order_categorization {
  derived_table: {
-   sql: SELECT order_id, MAX(total_quantity) as max_sku_quantity
-        FROM (
-              SELECT order_id, SUM(quantity) as total_quantity
-              FROM shopify.sales
-              WHERE line_type = 'product'
-              GROUP BY order_id, line_item_id
-        ) as per_item
+   sql: SELECT order_id, MAX(quantity) as max_sku_quantity
+        FROM shopify.sales
+        WHERE line_type = 'product'
         GROUP BY order_id
      ;;
   }
