@@ -70,7 +70,7 @@ explore: sales {
 
   join: billing_addresses {
     from: addresses
-    sql_on: ${billing_addresses.address_id} = ${sales.shipping_address_id} ;;
+    sql_on: ${billing_addresses.address_id} = ${sales.billing_address_id} ;;
     type: left_outer
     relationship: one_to_one
   }
