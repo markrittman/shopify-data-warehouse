@@ -12,6 +12,12 @@ view: order_categorization {
     sql: ${TABLE}.order_id ;;
   }
 
+  dimension: max_sku_quantity {
+    type: number
+    hidden:  yes
+    sql: ${TABLE}.max_sku_quantity ;;
+  }
+
   dimension: is_reseller {
     type: number
     sql: case when ${TABLE}.max_sku_quantity > 4 then 1 else 0 end ;;
