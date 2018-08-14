@@ -85,4 +85,13 @@ view: addresses {
       when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 2
       else 4 end ;;
   }
+
+  dimension: zone_name {
+    type: string
+    order_by_field: zone
+    sql: case
+      when ${TABLE}.country = 'United States' then 'USA'
+      when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 'Asia'
+      else 'Other' end ;;
+  }
 }

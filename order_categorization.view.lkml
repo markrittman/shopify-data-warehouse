@@ -1,11 +1,22 @@
 view: order_categorization {
  derived_table: {
-   sql: SELECT order_id, MAX(quantity) as max_sku_quantity
+   sql: SELECT order_id, MAX(quantity) as max_sku_quantity, count(*) as count_order_items
         FROM shopify.sales
         WHERE line_type = 'product'
         GROUP BY order_id
      ;;
   }
+
+  set: sales_drilldown_set {
+    fields: [
+      customers.full_name,
+      products.product_type,
+      products.title,
+      products.vendor,
+      addresses.zone_name
+    ]
+  }
+
   dimension: order_id {
     type: number
     hidden: yes
@@ -18,10 +29,32 @@ view: order_categorization {
     sql: ${TABLE}.max_sku_quantity ;;
   }
 
+  dimension: count_order_items {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.count_order_items ;;
+  }
+
   dimension: is_reseller {
     type: number
     sql: case when ${TABLE}.max_sku_quantity > 4 then 1 else 0 end ;;
     group_label: "Category"
+  }
+
+  dimension: is_enthusiast {
+    type: number
+    sql: case when (${TABLE}.count_order_items > 100 and ${TABLE}.max_sku_quantity <= 4) then 1 else 0 end ;;
+    group_label: "Category"
+    }
+
+  dimension: segment {
+    type: string
+    sql: case when ${TABLE}.max_sku_quantity > 4 then 'Reseller'
+         when (${TABLE}.count_order_items > 100 and ${TABLE}.max_sku_quantity <= 4) then 'Beauty Enthusiast'
+         else 'Other' end ;;
+    group_label: "Category"
+    drill_fields: [sales_drilldown_set*]
+
   }
 #
 #   # Define your dimensions and measures here, like this:
