@@ -1,9 +1,11 @@
 view: order_categorization {
  derived_table: {
-   sql: SELECT order_id, MAX(quantity) as max_sku_quantity, count(*) as count_order_items
-        FROM shopify.sales
+   sql: SELECT order_id, ba.country as country, MAX(quantity) as max_sku_quantity, count(*) as count_order_items
+        FROM shopify.sales s
+        JOIN shopify.addresses ba
+        ON s.billing_address_id = ba.address_id
         WHERE line_type = 'product'
-        GROUP BY order_id
+        GROUP BY order_id, country
      ;;
   }
 
@@ -48,6 +50,8 @@ view: order_categorization {
     group_label: "Category"
     }
 
+
+
   dimension: segment {
     type: string
     sql: case when ${TABLE}.max_sku_quantity > 4 then 'Reseller'
@@ -56,6 +60,29 @@ view: order_categorization {
     drill_fields: [sales_drilldown_set*]
 
   }
+
+  dimension: summary_segment {
+    type: string
+    order_by_field: summary_segment_sort_key
+    sql: case when ${TABLE}.max_sku_quantity > 4 then 'Reseller'
+              when ${TABLE}.country = 'United States' then 'Core US Beauty Enthusiast'
+              when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 'Core Asia Beauty Enthusiast'
+              else 'Core Intl Beauty Enthusiast' end ;;
+    group_label: "Category"
+    drill_fields: [sales_drilldown_set*]
+
+  }
+
+  dimension: summary_segment_sort_key {
+    type: number
+    sql: case when ${TABLE}.max_sku_quantity > 4 then 4
+              when ${TABLE}.country = 'United States' then 1
+              when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 3
+              else 2 end ;;
+    hidden: yes
+
+  }
+
 #
 #   # Define your dimensions and measures here, like this:
 #   dimension: user_id {
