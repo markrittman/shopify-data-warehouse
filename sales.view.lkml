@@ -371,6 +371,15 @@ view: sales {
     group_label: "Local Currency"
   }
 
+    #added by MR 08-14-2018
+
+  measure: total_sales_total {
+    type: sum
+    sql: ${TABLE}.net_sales + ${TABLE}.shipping + ${TABLE}.taxes;;
+    value_format_name: local_currency
+    group_label: "Local Currency"
+    }
+
 # FX -------------------------------------------------------------------
 
   measure: discounts_total_fx {
@@ -435,6 +444,16 @@ view: sales {
     value_format_name: usd
     group_label: "FX"
   }
+
+  #added by MR 08-14-2018
+
+  measure: total_sales_total_fx {
+    type: sum
+    sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_xf + ${TABLE}.taxes_xf;;
+    value_format_name: usd
+    group_label: "FX"
+  }
+
 
   # Counts -------------------------------------------------------------------
 

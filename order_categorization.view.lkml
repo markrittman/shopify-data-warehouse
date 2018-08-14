@@ -43,6 +43,7 @@ view: order_categorization {
 
   dimension: is_enthusiast {
     type: number
+    hidden: yes
     sql: case when (${TABLE}.count_order_items > 100 and ${TABLE}.max_sku_quantity <= 4) then 1 else 0 end ;;
     group_label: "Category"
     }
@@ -50,8 +51,7 @@ view: order_categorization {
   dimension: segment {
     type: string
     sql: case when ${TABLE}.max_sku_quantity > 4 then 'Reseller'
-         when (${TABLE}.count_order_items > 100 and ${TABLE}.max_sku_quantity <= 4) then 'Beauty Enthusiast'
-         else 'Other' end ;;
+         else 'Beauty Enthusiast' end ;;
     group_label: "Category"
     drill_fields: [sales_drilldown_set*]
 
