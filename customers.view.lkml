@@ -8,9 +8,9 @@ view: customers {
 
   dimension: customer_id {
     primary_key: yes
+    hidden: yes
     type: number
     sql: ${TABLE}.customer_id ;;
-    hidden: yes
   }
 
   dimension: shop_id {

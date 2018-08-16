@@ -7,6 +7,111 @@ view: sales {
 
   sql_table_name: shopify.sales ;;
 
+  parameter: primary_metric_name {
+    type: unquoted
+    default_value: "net_sales_fx"
+    allowed_value: {
+      label: "Net Sales FX"
+      value: "sales.net_sales_fx"
+    }
+    allowed_value: {
+      label: "Gross Sales FX"
+      value: "sales.gross_sales_fx"
+    }
+    allowed_value: {
+      label: "Gift Cards Issued Fx"
+      value: "sales.gift_cards_issued_fx"
+    }
+    allowed_value: {
+      label: "Gift Card Gross Sales FX"
+      value: "sales.gift_card_gross_sales_fx"
+    }
+    allowed_value: {
+      label: "Discounts FX"
+      value: "sales.discounts_fx"
+    }
+
+    }
+
+
+
+
+
+    parameter: date_part {
+      type: string
+      default_value: "month"
+      allowed_value: {
+        value: "day"
+      }
+      allowed_value: {
+        value: "week"
+      }
+      allowed_value: {
+        value: "month"
+      }
+      allowed_value: {
+        value: "quarter"
+      }
+      allowed_value: {
+        value: "year"
+      }
+    }
+
+  parameter: date_filter {
+    type: date_time
+    default_value: "Last 3 Month"
+    allowed_value: {
+      label: "Current Week"
+      value: "This Week"
+    }
+    allowed_value: {
+      label: "1 Week"
+      value: "Last Week"
+    }
+    allowed_value: {
+      label: "2 Weeks"
+      value: "Last 2 Week"
+    }
+    allowed_value: {
+      label: "4 Weeks"
+      value: "Last 4 Week"
+    }
+    allowed_value: {
+      label: "Current Month"
+      value: "This Month"
+    }
+    allowed_value: {
+      label: "1 Month"
+      value: "Last Month"
+    }
+    allowed_value: {
+      label: "3 Months"
+      value: "Last 3 Month"
+    }
+    allowed_value: {
+      label: "6 Months"
+      value: "Last 6 Month"
+    }
+    allowed_value: {
+      label: "Current Qtr"
+      value: "This Quarter"
+    }
+    allowed_value: {
+      label: "1 Qtr"
+      value: "Last Quarter"
+    }
+    allowed_value: {
+      label: "2 Qtrs"
+      value: "Last 2 Quarter"
+    }
+    allowed_value: {
+      label: "YTD"
+      value: "This Year"
+    }
+  }
+
+
+
   # IDs -------------------------------------------------------------------
 
   dimension: sale_id {
@@ -103,6 +208,24 @@ view: sales {
     sql: ${TABLE}.happened_at ;;
     group_label: "Dates"
   }
+
+  dimension: period {
+    label_from_parameter : date_part
+    sql: {% if date_part._parameter_value == "'day'" %}
+         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY-MM-DD')
+         {% elsif date_part._parameter_value == "'month'" %}
+         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY-MM')
+         {% elsif date_part._parameter_value == "'week'" %}
+         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY-WW')
+        {% elsif date_part._parameter_value == "'quarter'" %}
+         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY-Q')
+        {% elsif date_part._parameter_value == "'year'" %}
+         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY')
+         {% else %}
+    NULL
+    {% endif %} ;;
+  }
+
 
   # Money -------------------------------------------------------------------
 
@@ -473,6 +596,25 @@ view: sales {
     sql: ${customer_id} ;;
     group_label: "Counts"
   }
+
+  measure: primary_metric {
+    sql: {% parameter primary_metric_name %};;
+    type: sum
+    value_format_name: usd
+
+    label_from_parameter: primary_metric_name
+  }
+
+
+
+
+  #measure: primary_metric_pct_of_total {
+  #  sql:    ${TABLE}.{% parameter primary_metric_name %} / sum(${TABLE}.{% parameter primary_metric_name %}) over () ;;
+  #  type: number
+  #  label: "% of Total"
+  #  }
+
+
 
   set: customer_details {
     fields: [

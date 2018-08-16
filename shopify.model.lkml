@@ -12,6 +12,7 @@ explore: customers {}
 explore: sales {
   # label: ""
   description: "this explore shows x"
+
   always_filter: {
     filters: {
       field: test
@@ -22,6 +23,9 @@ explore: sales {
       value: "no"
     }
   }
+
+  sql_always_where: {% condition sales.date_filter %} sales.happened_at {% endcondition %} ;;
+
 
   join: orders {
     sql_on: ${sales.order_id} = ${orders.order_id} ;;
@@ -59,6 +63,18 @@ explore: sales {
     sql_on: ${orders.customer_id} = ${customers.customer_id} ;;
     type:  left_outer
     relationship: many_to_one
+  }
+
+  join: customer_default__billing_country_and_zone {
+    sql_on: ${customers.customer_id} = ${customer_default__billing_country_and_zone.customer_id} ;;
+    type: left_outer
+    relationship: one_to_one
+  }
+
+  join: customer_reseller_status {
+    sql_on: ${customers.customer_id} = ${customer_reseller_status.customer_id} ;;
+    type: left_outer
+    relationship: one_to_one
   }
 
   join: shipping_addresses {

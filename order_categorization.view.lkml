@@ -15,13 +15,17 @@ view: order_categorization {
       products.product_type,
       products.title,
       products.vendor,
-      addresses.zone_name
+      addresses.zone_name,
+      customer_default__billing_country_and_zone.default_billing_address_zone,
+      customer_default__billing_country_and_zone.default_billing_address_country,
+      customer_reseller_status.segment
     ]
   }
 
   dimension: order_id {
     type: number
     hidden: yes
+    primary_key: yes
     sql: ${TABLE}.order_id ;;
   }
 
@@ -80,6 +84,12 @@ view: order_categorization {
               when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 3
               else 2 end ;;
     hidden: yes
+  }
+
+  measure: count_reseller {
+    type: sum
+    sql: case when ${TABLE}.max_sku_quantity > 4 then 1 else 0 end ;;
+
 
   }
 
