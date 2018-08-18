@@ -7,9 +7,19 @@ view: sales {
 
   sql_table_name: shopify.sales ;;
 
+  # Parameters -------------------------------------------------------------------
+
+# Parameters used to create the Metric, Time Granularity and Date Range drop-down menu items in the Reseller dashboard.
+# These parameters appear as Filter Only Fields in an explore and are referenced later in the view by the
+# period dimension (date_part parameter) and primary_metric (primary_metric_name parameter), and in the sales explore (date_filter)
+
   parameter: primary_metric_name {
     type: unquoted
-    default_value: "net_sales_fx"
+    default_value: "total_sales_fx"
+    allowed_value: {
+      label: "Total Sales FX"
+      value: "sales.total_sales_fx"
+    }
     allowed_value: {
       label: "Net Sales FX"
       value: "sales.net_sales_fx"
@@ -30,15 +40,11 @@ view: sales {
       label: "Discounts FX"
       value: "sales.discounts_fx"
     }
-
-    }
-
-
-
-
+  }
 
     parameter: date_part {
       type: string
+      label: "Time Granularity"
       default_value: "month"
       allowed_value: {
         value: "day"
@@ -59,6 +65,7 @@ view: sales {
 
   parameter: date_filter {
     type: date_time
+    label: "Date Range"
     default_value: "Last 3 Month"
     allowed_value: {
       label: "Current Week"
@@ -109,8 +116,6 @@ view: sales {
       value: "This Year"
     }
   }
-
-
 
   # IDs -------------------------------------------------------------------
 
@@ -208,6 +213,9 @@ view: sales {
     sql: ${TABLE}.happened_at ;;
     group_label: "Dates"
   }
+
+  # Dimension that goes with the "date_part" parameter, that when added to a look that uses this parameter alters the time
+  # granularity of the report to subtotal metrics by day, month, week, quarter or year
 
   dimension: period {
     label_from_parameter : date_part
@@ -369,7 +377,6 @@ view: sales {
   }
 
   dimension: total_sales_fx {
-    hidden: yes
     type: number
     sql: ${TABLE}.total_sales_fx ;;
     value_format_name: usd
@@ -542,21 +549,21 @@ view: sales {
 
   measure: returns_total_fx {
     type: sum
-    sql: ${TABLE}.returns_xf ;;
+    sql: ${TABLE}.returns_fx ;;
     value_format_name: usd
     group_label: "FX"
   }
 
-  measure: taxes_total_xf {
+  measure: taxes_total_fx {
     type: sum
-    sql: ${TABLE}.taxes_xf ;;
+    sql: ${TABLE}.taxes_fx ;;
     value_format_name: usd
     group_label: "FX"
   }
 
-  measure: shipping_total_xf {
+  measure: shipping_total_fx {
     type: sum
-    sql: ${TABLE}.shipping_xf ;;
+    sql: ${TABLE}.shipping_fx ;;
     value_format_name: usd
     group_label: "FX"
   }
@@ -568,11 +575,9 @@ view: sales {
     group_label: "FX"
   }
 
-  #added by MR 08-14-2018
-
   measure: total_sales_total_fx {
     type: sum
-    sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_xf + ${TABLE}.taxes_xf;;
+    sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_fx + ${TABLE}.taxes_fx;;
     value_format_name: usd
     group_label: "FX"
   }
@@ -597,6 +602,9 @@ view: sales {
     group_label: "Counts"
   }
 
+  # Dynamic measure used in conjunction with the primary_metric_name parameter to allow the user to
+  # switch the measure used in a look or tile
+
   measure: primary_metric {
     sql: {% parameter primary_metric_name %};;
     type: sum
@@ -606,13 +614,6 @@ view: sales {
   }
 
 
-
-
-  #measure: primary_metric_pct_of_total {
-  #  sql:    ${TABLE}.{% parameter primary_metric_name %} / sum(${TABLE}.{% parameter primary_metric_name %}) over () ;;
-  #  type: number
-  #  label: "% of Total"
-  #  }
 
 
 

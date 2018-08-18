@@ -54,6 +54,7 @@ view: customer_reseller_status {
 
   dimension: segment {
     group_label: "Category"
+    hidden: yes
     type: string
   }
 

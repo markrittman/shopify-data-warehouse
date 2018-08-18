@@ -4,6 +4,29 @@ view: customers {
 
   sql_table_name: shopify.customers ;;
 
+  parameter: customer_reseller_segment {
+    label: "Customer Segment"
+    type: unquoted
+    default_value: "reseller"
+    allowed_value: {
+      label: "Reseller"
+      value: "Reseller"
+    }
+    allowed_value: {
+      label: "Core US Beauty Enthusiast"
+      value: "Core US Beauty Enthusiast"
+    }
+    allowed_value: {
+      label: "Core Asia Beauty Enthusiast"
+      value: "Core Asia Beauty Enthusiast"
+    }
+    allowed_value: {
+      label: "Core Other Beauty Enthusiast"
+      value: "Core Other Beauty Enthusiast"
+    }
+  }
+
+
   # IDs -------------------------------------------------------------------
 
   dimension: customer_id {

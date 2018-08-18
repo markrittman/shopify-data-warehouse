@@ -4,7 +4,10 @@ view: customer_default__billing_country_and_zone {
     sql: SELECT   c.customer_id, first_value(a.country)
                         over(partition by c.customer_id
                         order by o.processed_at desc
-                        rows between unbounded preceding and unbounded following) as country
+                        rows between unbounded preceding and unbounded following) as country,
+                        count(o.order_id) over (partition by c.customer_id
+                        order by o.processed_at desc
+                        rows between unbounded preceding and unbounded following) as order_count
          from shopify.customers c
          join shopify.orders o
          on   c.customer_id = o.order_id
@@ -36,6 +39,16 @@ view: customer_default__billing_country_and_zone {
     hidden: yes
     sql: ${TABLE}.customer_id ;;
   }
+
+  dimension: order_count {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.order_count ;;
+  }
+
+
+
+
 
   dimension: default_billing_address_zone {
     label: "Default Billing Address Zone"
