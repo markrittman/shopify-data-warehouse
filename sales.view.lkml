@@ -376,11 +376,24 @@ view: sales {
     value_format_name: local_currency
   }
 
+  dimension: total_no_tax_sales {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.net_sales + ${TABLE}.net_shipping ;;
+    value_format_name: local_currency
+  }
+
   dimension: total_sales_fx {
     type: number
     sql: ${TABLE}.total_sales_fx ;;
     value_format_name: usd
   }
+
+  dimension: total_no_tax_sales_fx {
+  type: number
+  sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_fx ;;
+  value_format_name: usd
+}
 
   # Other -------------------------------------------------------------------
 
@@ -510,7 +523,7 @@ view: sales {
     group_label: "Local Currency"
     }
 
-  measure: total_sales_no_tax_total {
+  measure: total_no_tax_total {
     type: sum
     sql: ${TABLE}.net_sales + ${TABLE}.shipping;;
     value_format_name: local_currency
@@ -590,9 +603,9 @@ view: sales {
     group_label: "FX"
   }
 
-  measure: total_sales_total_no_tax_fx {
+  measure: total_no_tax_total_fx {
     type: sum
-    sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_fx + ${TABLE}.taxes_fx;;
+    sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_fx;;
     value_format_name: usd
     group_label: "FX"
   }
