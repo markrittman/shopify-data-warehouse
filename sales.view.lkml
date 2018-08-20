@@ -15,10 +15,10 @@ view: sales {
 
   parameter: primary_metric_name {
     type: unquoted
-    default_value: "total_sales_fx"
+    default_value: "total_no_tax_total_fx"
     allowed_value: {
-      label: "Total Sales FX"
-      value: "sales.total_sales_fx"
+      label: "Total (No Tax) Sales FX"
+      value: "sales.total_no_tax_total_fx"
     }
     allowed_value: {
       label: "Net Sales FX"
