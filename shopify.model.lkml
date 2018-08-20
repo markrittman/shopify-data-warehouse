@@ -65,17 +65,33 @@ explore: sales {
     relationship: many_to_one
   }
 
-  join: customer_default__billing_country_and_zone {
-    sql_on: ${customers.customer_id} = ${customer_default__billing_country_and_zone.customer_id} ;;
-    type: left_outer
+  join: customer_cohort {
+    sql_on: ${orders.customer_id} = ${customer_cohort.customer_id} ;;
+    type:  left_outer
+    relationship: many_to_one
+  }
+
+  join: cohort_size {
+    sql_on: ${customer_cohort.processed_month} = ${cohort_size.processed_month} ;;
+    type: inner
     relationship: one_to_one
   }
+
+
+
+  #join: customer_default__billing_country_and_zone {
+  #  sql_on: ${customers.customer_id} = ${customer_default__billing_country_and_zone.customer_id} ;;
+  #  type: left_outer
+  #  relationship: one_to_one
+  #}
 
   join: customer_reseller_status {
     sql_on: ${customers.customer_id} = ${customer_reseller_status.customer_id} ;;
     type: left_outer
     relationship: one_to_one
   }
+
+
 
   join: shipping_addresses {
     from: addresses
@@ -161,4 +177,5 @@ explore: order_attribution_interactions {
     relationship: many_to_one
     fields: []
   }
+
 }

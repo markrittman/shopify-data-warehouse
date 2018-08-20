@@ -1,5 +1,9 @@
 view: order_categorization {
  derived_table: {
+  persist_for: "8 hours"
+  indexes: ["order_id"]
+  distribution_style: "all"
+
    sql: SELECT order_id, ba.country as country, MAX(quantity) as max_sku_quantity, count(*) as count_order_items
         FROM shopify.sales s
         JOIN shopify.addresses ba

@@ -1,5 +1,9 @@
 view: order_fact {
   derived_table: {
+    persist_for: "8 hours"
+    indexes: ["order_id"]
+    distribution_style: "all"
+
     sql:
     SELECT   orders.order_id
            , row_number() over (partition by customer_id order by processed_at) as order_index
