@@ -10,6 +10,7 @@ named_value_format: local_currency {
 explore: customers {}
 
 explore: sales {
+  persist_for: "8 hours"
   # label: ""
   description: "this explore shows x"
 
