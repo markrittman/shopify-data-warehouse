@@ -12,7 +12,9 @@ view: order_product_type_fact {
   products.product_type,
   orders.processed_at,
   ROW_NUMBER() OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at) as product_type_order_index,
-  LAG(orders.processed_at,1) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at) as prev_processed_at
+  LAG(orders.processed_at,1) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at) as prev_processed_at,
+    FIRST_VALUE(orders.processed_at) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at
+    rows between unbounded preceding and unbounded following) as first_type_order_processed_at
 FROM shopify.sales  AS sales
 INNER JOIN shopify.orders  AS orders ON sales.order_id = orders.order_id
 LEFT JOIN shopify.products  AS products ON sales.product_id = products.product_id
@@ -72,6 +74,21 @@ GROUP BY 1,2,3,4;;
 
   }
 
+  dimension_group: first_type_order_processed_at {
+    group_label: "Dates"
+    label: "First Type Purchase"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+  }
+
   dimension: months_to_repeat_type {
     type: string
     order_by_field:  months_to_repeat_type_sort_order
@@ -97,6 +114,7 @@ GROUP BY 1,2,3,4;;
     group_label: "Days Between Orders"
 
   }
+
 
 
 
