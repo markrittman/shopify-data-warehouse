@@ -196,6 +196,11 @@ view: orders {
     group_label: "Other"
   }
 
+  dimension: discount_code {
+    sql: ${TABLE}.discount_code ;;
+    group_label: "Other"
+  }
+
 ###### These were moved into the order_fact table that we built ######
 
 #   dimension: order_index {
@@ -233,5 +238,7 @@ view: orders {
     sql: ${TABLE}.total_price_fx ;;
     value_format_name: usd
   }
+
+
 
 }

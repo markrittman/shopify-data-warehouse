@@ -415,8 +415,9 @@ view: sales {
     group_label: "Other"
   }
 
-  dimension: quantity {
-    type: number
+  dimension: quantity_tier {
+    type: tier
+    tiers: [1,2,3,5,10,20,50,100,500]
     sql: ${TABLE}.quantity ;;
     group_label: "Other"
   }
@@ -628,6 +629,11 @@ view: sales {
     type: count_distinct
     sql: ${customer_id} ;;
     group_label: "Counts"
+  }
+
+  measure: quantity {
+    type: sum
+    sql: ${TABLE}.quantity ;;
   }
 
   # Dynamic measure used in conjunction with the primary_metric_name parameter to allow the user to
