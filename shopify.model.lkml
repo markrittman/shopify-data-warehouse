@@ -107,6 +107,18 @@ explore: sales {
     type: left_outer
     relationship: one_to_one
   }
+
+  join: order_product_type_fact {
+    sql_on: ${orders.order_id} = ${order_product_type_fact.order_id} AND ${products.product_type} = ${order_product_type_fact.product_type};;
+    type: left_outer
+    relationship: one_to_one
+  }
+
+  join: order_product_sku_fact {
+    sql_on: ${orders.order_id} = ${order_product_sku_fact.order_id} AND ${products.product_type} = ${order_product_sku_fact.product_title};;
+    type: left_outer
+    relationship: one_to_one
+  }
 }
 
 explore: current_inventory {

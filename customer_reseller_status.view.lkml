@@ -34,6 +34,7 @@ view: customer_reseller_status {
   }
   dimension: customer_id {
     type: number
+    hidden: yes
     primary_key: yes
   }
 
