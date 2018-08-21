@@ -54,6 +54,9 @@ GROUP BY 1,2,3,4;;
     sql: ${TABLE}.product_type_order_index ;;
   }
 
+
+
+
   dimension: type_new_vs_repeat {
     label: "Type New vs Repeat"
     type: string
@@ -68,6 +71,34 @@ GROUP BY 1,2,3,4;;
     group_label: "Days Between Orders"
 
   }
+
+  dimension: months_to_repeat_type {
+    type: string
+    order_by_field:  months_to_repeat_type_sort_order
+    sql: case when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=3 then 'Within 3 Months'
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 3 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=6 then 'Within 6 Months'
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 6 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=9 then 'Within 9 Months'
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 9 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=12 then 'Within 12 Months'
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 12 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=24 then 'Within 24 Months'
+         else null end;;
+    group_label: "Days Between Orders"
+
+  }
+
+  dimension: months_to_repeat_type_sort_order {
+    type: number
+    hidden: yes
+    sql: case when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=3 then 1
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 3 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=6 then 2
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 6 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=9 then 3
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 9 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=12 then 4
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 12 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=24 then 5
+         else null end;;
+    group_label: "Days Between Orders"
+
+  }
+
+
 
 
   # # You can specify the table name if it's different from the view name:
