@@ -1,7 +1,7 @@
 view: order_product_type_fact {
   view_label: "Orders"
   derived_table: {
-    persist_for: "8 hours"
+    persist_for: "24 hours"
     indexes: ["order_id","product_type"]
     distribution_style: "all"
 
@@ -47,6 +47,8 @@ GROUP BY 1,2,3,4;;
   }
 
   dimension: product_type_order_index {
+    group_label: "Repurchase Indexes"
+
     label: "Type Order Index"
     type: number
     sql: ${TABLE}.product_type_order_index ;;
@@ -63,7 +65,7 @@ GROUP BY 1,2,3,4;;
     type: average
     value_format: "0"
     sql: DATEDIFF(day,${TABLE}.prev_processed_at,${TABLE}.processed_at) ;;
-    group_label: "Other"
+    group_label: "Days Between Orders"
 
   }
 

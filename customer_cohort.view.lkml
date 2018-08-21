@@ -4,7 +4,7 @@
 view: customer_cohort {
   view_label: "Customers"
   derived_table: {
-    persist_for: "8 hours"
+    persist_for: "24 hours"
     indexes: ["customer_id","processed_month"]
     distribution_style: "all"
 

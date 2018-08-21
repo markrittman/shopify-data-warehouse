@@ -10,7 +10,7 @@ named_value_format: local_currency {
 explore: customers {}
 
 explore: sales {
-  persist_for: "8 hours"
+  persist_for: "1 hours"
   # label: ""
   description: "this explore shows x"
 
@@ -115,7 +115,7 @@ explore: sales {
   }
 
   join: order_product_sku_fact {
-    sql_on: ${orders.order_id} = ${order_product_sku_fact.order_id} AND ${products.product_type} = ${order_product_sku_fact.product_title};;
+    sql_on: ${orders.order_id} = ${order_product_sku_fact.order_id} AND ${products.title} = ${order_product_sku_fact.title};;
     type: left_outer
     relationship: one_to_one
   }

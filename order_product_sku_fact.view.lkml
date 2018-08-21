@@ -1,17 +1,19 @@
 view: order_product_sku_fact {
   view_label: "Orders"
   derived_table: {
-    persist_for: "8 hours"
-    indexes: ["order_id","customer_id","product_title"]
+    persist_for: "24 hours"
+    indexes: ["order_id","customer_id","title"]
     distribution_style: "all"
 
     sql:
     SELECT
   orders.order_id,
   customers.customer_id,
-  products.product_title,
+  products.title,
   orders.processed_at,
-  ROW_NUMBER() OVER (PARTITION BY customers.customer_id,products.product_title ORDER BY orders.processed_at) as product_title_order_index
+  ROW_NUMBER() OVER (PARTITION BY customers.customer_id,products.title ORDER BY orders.processed_at) as product_title_order_index,
+    LAG(orders.processed_at,1) OVER (PARTITION BY customers.customer_id,products.title ORDER BY orders.processed_at) as prev_processed_at
+
 FROM shopify.sales  AS sales
 INNER JOIN shopify.orders  AS orders ON sales.order_id = orders.order_id
 LEFT JOIN shopify.products  AS products ON sales.product_id = products.product_id
@@ -26,10 +28,17 @@ GROUP BY 1,2,3,4;;
     sql: ${TABLE}.order_id ;;
   }
 
-  dimension: product_title {
+  dimension: title {
     type: string
     hidden: yes
-    sql: ${TABLE}.product_type ;;
+    sql: ${TABLE}.title ;;
+  }
+
+  dimension: pk{
+    type: string
+    primary_key: yes
+    hidden: yes
+    sql: concat(concat(concat(${TABLE}.order_id,${TABLE}.customer_id),${TABLE}.title),${TABLE}.product_title_order_index) ;;
   }
 
   dimension: customer_id {
@@ -39,9 +48,10 @@ GROUP BY 1,2,3,4;;
   }
 
   dimension: product_title_order_index {
+    group_label: "Repurchase Indexes"
     label: "Title Order Index"
     type: number
-    sql: ${TABLE}.product_type_order_index ;;
+    sql: ${TABLE}.product_title_order_index ;;
   }
 
   dimension: title_new_vs_repeat {
@@ -49,6 +59,14 @@ GROUP BY 1,2,3,4;;
     type: string
     sql: case when ${product_title_order_index} = 1 then 'new' else 'repeat' end ;;
     group_label: "Other"
+  }
+
+  measure: days_since_last_title_order {
+    type: average
+    value_format: "0"
+    sql: DATEDIFF(day,${TABLE}.prev_processed_at,${TABLE}.processed_at) ;;
+    group_label: "Days Between Orders"
+
   }
 
 

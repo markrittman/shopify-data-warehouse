@@ -1,6 +1,6 @@
 view: order_categorization {
  derived_table: {
-  persist_for: "8 hours"
+  persist_for: "24 hours"
   indexes: ["order_id"]
   distribution_style: "all"
 

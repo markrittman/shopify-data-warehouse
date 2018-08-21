@@ -4,7 +4,7 @@
 view: customer_reseller_status {
   view_label: "Customers"
   derived_table: {
-    persist_for: "8 hours"
+    persist_for: "24 hours"
     indexes: ["customer_id","zone_name"]
     distribution_style: "all"
     explore_source: sales {

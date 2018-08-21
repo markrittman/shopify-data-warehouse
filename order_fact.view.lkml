@@ -1,6 +1,6 @@
 view: order_fact {
   derived_table: {
-    persist_for: "8 hours"
+    persist_for: "24 hours"
     indexes: ["order_id"]
     distribution_style: "all"
 
@@ -19,6 +19,8 @@ view: order_fact {
   }
 
   dimension: order_index {
+    group_label: "Repurchase Indexes"
+
     type: number
     sql: ${TABLE}.order_index ;;
   }
