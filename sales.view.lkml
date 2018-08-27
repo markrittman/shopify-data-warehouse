@@ -15,30 +15,30 @@ view: sales {
 
   parameter: primary_metric_name {
     type: unquoted
-    default_value: "sales.total_no_tax_total_fx"
+    default_value: "total_no_tax_total_fx"
     allowed_value: {
       label: "Total (No Tax) Sales FX"
-      value: "sales.total_no_tax_total_fx"
+      value: "total_no_tax_total_fx"
     }
     allowed_value: {
       label: "Net Sales FX"
-      value: "sales.net_sales_fx"
+      value: "net_sales_fx"
     }
     allowed_value: {
       label: "Gross Sales FX"
-      value: "sales.gross_sales_fx"
+      value: "gross_sales_fx"
     }
     allowed_value: {
       label: "Gift Cards Issued Fx"
-      value: "sales.gift_cards_issued_fx"
+      value: "gift_cards_issued_fx"
     }
     allowed_value: {
       label: "Gift Card Gross Sales FX"
-      value: "sales.gift_card_gross_sales_fx"
+      value: "gift_card_gross_sales_fx"
     }
     allowed_value: {
       label: "Discounts FX"
-      value: "sales.discounts_fx"
+      value: "discounts_fx"
     }
   }
 
