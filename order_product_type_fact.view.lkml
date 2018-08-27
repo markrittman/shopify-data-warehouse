@@ -49,7 +49,7 @@ GROUP BY 1,2,3,4;;
   }
 
   dimension: product_type_order_index {
-    group_label: "Repurchase Indexes"
+    group_label: "Retention"
 
     label: "Type Order Index"
     type: number
@@ -63,14 +63,14 @@ GROUP BY 1,2,3,4;;
     label: "Type New vs Repeat"
     type: string
     sql: case when ${product_type_order_index} = 1 then 'new' else 'repeat' end ;;
-    group_label: "Other"
-  }
+    group_label: "Retention"
+    }
 
   measure: days_since_last_type_order {
     type: average
     value_format: "0"
     sql: DATEDIFF(day,${TABLE}.prev_processed_at,${TABLE}.processed_at) ;;
-    group_label: "Days Between Orders"
+    group_label: "Retention"
 
   }
 
@@ -90,30 +90,38 @@ GROUP BY 1,2,3,4;;
   }
 
   dimension: months_to_repeat_type {
+    group_label: "Retention"
     type: string
     order_by_field:  months_to_repeat_type_sort_order
-    sql: case when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=3 then 'Within 3 Months'
+    sql: case when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=1 then 'Within 1 Month'
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=2 then 'Within 2 Months'
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=3 then 'Within 3 Months'
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 3 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=6 then 'Within 6 Months'
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 6 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=9 then 'Within 9 Months'
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 9 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=12 then 'Within 12 Months'
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 12 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=24 then 'Within 24 Months'
+              when ${TABLE}.prev_processed_at is null then 'Cohort Population'
          else null end;;
-    group_label: "Days Between Orders"
 
   }
+
+
 
   dimension: months_to_repeat_type_sort_order {
+    group_label: "Retention"
+
     type: number
     hidden: yes
-    sql: case when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=3 then 1
-              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 3 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=6 then 2
-              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 6 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=9 then 3
-              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 9 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=12 then 4
-              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 12 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=24 then 5
-         else null end;;
-    group_label: "Days Between Orders"
+    sql: case when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=3 then 2
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 3 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=6 then 3
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 6 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=9 then 4
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 9 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=12 then 5
+              when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 12 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=24 then 6
+              when ${TABLE}.prev_processed_at is null then 1
 
+         else null end;;
   }
+
 
 
 

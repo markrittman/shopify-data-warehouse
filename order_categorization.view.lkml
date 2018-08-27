@@ -26,6 +26,19 @@ view: order_categorization {
     ]
   }
 
+  set: customer_details {
+    fields: [
+      customers.first_name,
+      customers.last_name,
+      customers.email,
+      customers.country,
+      customers.created_date,
+      customers.last_order_date,
+      sales.primary_metric
+    ]
+  }
+
+
   dimension: order_id {
     type: number
     hidden: yes
@@ -46,6 +59,7 @@ view: order_categorization {
   }
 
   dimension: is_reseller {
+    hidden: yes
     type: number
     sql: case when ${TABLE}.max_sku_quantity > 4 then 1 else 0 end ;;
     group_label: "Category"
@@ -61,6 +75,7 @@ view: order_categorization {
 
 
   dimension: segment {
+    hidden: yes
     type: string
     sql: case when ${TABLE}.max_sku_quantity > 4 then 'Reseller'
          else 'Beauty Enthusiast' end ;;
@@ -77,7 +92,7 @@ view: order_categorization {
               when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 'Core Asia Beauty Enthusiast'
               else 'Core Intl Beauty Enthusiast' end ;;
     group_label: "Category"
-    drill_fields: [sales_drilldown_set*]
+    drill_fields: [customer_details*]
 
   }
 
@@ -91,6 +106,7 @@ view: order_categorization {
   }
 
   measure: count_reseller {
+    group_label: "Counts"
     type: sum
     sql: case when ${TABLE}.max_sku_quantity > 4 then 1 else 0 end ;;
 

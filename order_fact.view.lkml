@@ -19,7 +19,7 @@ view: order_fact {
   }
 
   dimension: order_index {
-    group_label: "Repurchase Indexes"
+    group_label: "Retention"
 
     type: number
     sql: ${TABLE}.order_index ;;
@@ -28,8 +28,8 @@ view: order_fact {
   dimension: new_vs_repeat {
     type: string
     sql: case when ${order_index} = 1 then 'new' else 'repeat' end ;;
-    group_label: "Other"
-  }
+    group_label: "Retention"
+    }
 
 
   # # You can specify the table name if it's different from the view name:

@@ -79,6 +79,7 @@ view: addresses {
   # The three zones have the numbers 1, 2 and 4 for each order such that we can add them and always have a unique number.
   # e.g. if a customer shipped to the USA and to China, then they'll have the number 3.
   dimension: zone {
+    hidden: yes
     type: number
     sql: case
       when ${TABLE}.country = 'United States' then 1

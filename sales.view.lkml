@@ -450,86 +450,95 @@ view: sales {
 
 # Measures -------------------------------------------------------------------
 
+ set: revenue_drill_fields {
+  fields: [orders.processed_week,
+           orders.processed_at,
+           customers.first_name,
+           orders.order_id,
+           customers.country
+          ]
+ }
+
 # Local Currency -------------------------------------------------------------------
 
-  measure: discounts_total {
-    type: sum
-    sql: ${TABLE}.discounts ;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: discounts_total {
+#   type: sum
+#   sql: ${TABLE}.discounts ;;
+#   value_format_name: local_currency
+#  group_label: "Local Currency"
+#  }
 
-  measure: gift_card_discounts_total {
-    type: sum
-    sql: ${TABLE}.gift_card_discounts ;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: gift_card_discounts_total {
+#    type: sum
+#    sql: ${TABLE}.gift_card_discounts ;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#  }
 
-  measure: gift_card_gross_sales_total {
-    type: sum
-    sql: ${TABLE}.gift_card_gross_sales ;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: gift_card_gross_sales_total {
+#    type: sum
+#    sql: ${TABLE}.gift_card_gross_sales ;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#  }
 
-  measure: gift_cards_issued_total {
-    type: sum
-    sql: ${TABLE}.gross_sales ;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: gift_cards_issued_total {
+#    type: sum
+#    sql: ${TABLE}.gross_sales ;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#  }
 
-  measure: net_sales_total {
-    type: sum
-    sql: ${TABLE}.net_sales ;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: net_sales_total {
+#    type: sum
+#    sql: ${TABLE}.net_sales ;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#  }
 
-  measure: returns_total {
-    type: sum
-    sql: ${TABLE}.returns ;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: returns_total {
+#    type: sum
+#    sql: ${TABLE}.returns ;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#  }
 
-  measure: taxes_total {
-    type: sum
-    sql: ${TABLE}.taxes ;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: taxes_total {
+#    type: sum
+#    sql: ${TABLE}.taxes ;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#  }
 
-  measure: shipping_total {
-    type: sum
-    sql: ${TABLE}.shipping ;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: shipping_total {
+#    type: sum
+#    sql: ${TABLE}.shipping ;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#  }
 
-  measure: gross_sales_total {
-    type: sum
-    sql: ${TABLE}.gross_sales ;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: gross_sales_total {
+#    type: sum
+#    sql: ${TABLE}.gross_sales ;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#  }
 
     #added by MR 08-14-2018
 
-  measure: total_sales_total {
-    type: sum
-    sql: ${TABLE}.net_sales + ${TABLE}.shipping + ${TABLE}.taxes;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-    }
+#  measure: total_sales_total {
+#    type: sum
+#    sql: ${TABLE}.net_sales + ${TABLE}.shipping + ${TABLE}.taxes;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#    }
 
-  measure: total_no_tax_total {
-    type: sum
-    sql: ${TABLE}.net_sales + ${TABLE}.shipping;;
-    value_format_name: local_currency
-    group_label: "Local Currency"
-  }
+#  measure: total_no_tax_total {
+#    type: sum
+#    sql: ${TABLE}.net_sales + ${TABLE}.shipping;;
+#    value_format_name: local_currency
+#    group_label: "Local Currency"
+#  }
 
 
 # FX -------------------------------------------------------------------
@@ -595,6 +604,7 @@ view: sales {
     sql: ${TABLE}.gross_sales_fx ;;
     value_format_name: usd
     group_label: "FX"
+    drill_fields: [revenue_drill_fields*]
   }
 
   measure: total_sales_total_fx {
@@ -609,6 +619,8 @@ view: sales {
     sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_fx;;
     value_format_name: usd
     group_label: "FX"
+    drill_fields: [revenue_drill_fields*]
+
   }
 
 
@@ -634,6 +646,8 @@ view: sales {
   measure: quantity {
     type: sum
     sql: ${TABLE}.quantity ;;
+    group_label: "Counts"
+
   }
 
   # Dynamic measure used in conjunction with the primary_metric_name parameter to allow the user to
@@ -641,9 +655,11 @@ view: sales {
 
   measure: primary_metric {
     sql: {% parameter primary_metric_name %};;
+    group_label: "FX"
+
     type: sum
     value_format_name: usd
-
+    drill_fields: [revenue_drill_fields*]
     label_from_parameter: primary_metric_name
   }
 
@@ -659,7 +675,7 @@ view: sales {
       customers.country,
       customers.created_date,
       customers.last_order_date,
-      gross_sales_total
+      sales.primary_metric
     ]
   }
 

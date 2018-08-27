@@ -7,6 +7,7 @@ view: orders {
 
   dimension: order_id {
     primary_key: yes
+    hidden: yes
     type: number
     sql: ${TABLE}.order_id ;;
     group_label: "IDs"
@@ -220,23 +221,29 @@ view: orders {
 
   measure: count {
     type: count
+    group_label: "Counts"
   }
 
   measure: count_customers {
     type: count_distinct
     sql: ${TABLE}.customer_id ;;
+    group_label: "Counts"
+
   }
 
   measure: avg_order_value {
     type: average
     sql: ${TABLE}.total_price_fx ;;
     value_format_name: usd
+    group_label: "Order Value"
   }
 
   measure: order_value {
     type: sum
     sql: ${TABLE}.total_price_fx ;;
     value_format_name: usd
+    group_label: "Order Value"
+
   }
 
 

@@ -32,6 +32,16 @@ view: customer_reseller_status {
       }
     }
   }
+
+  set: revenue_drill_fields {
+    fields: [orders.processed_week,
+      orders.processed_at,
+             orders.order_id,
+            customers.customer_id
+
+    ]
+  }
+
   dimension: customer_id {
     type: number
     hidden: yes
@@ -48,6 +58,7 @@ view: customer_reseller_status {
   dimension: summary_segment {
     group_label: "Category"
     type: string
+    drill_fields: [revenue_drill_fields*]
   }
 
  }
