@@ -114,6 +114,12 @@ explore: sales {
     relationship: one_to_one
   }
 
+  join: product_type_cohort_size {
+    sql_on: ${products.product_type} = ${product_type_cohort_size.product_type};;
+    type: left_outer
+    relationship: one_to_one
+  }
+
 
 
 
@@ -195,4 +201,3 @@ explore: sales {
      fields: []
    }
   }
-
