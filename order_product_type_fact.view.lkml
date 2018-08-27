@@ -100,7 +100,6 @@ GROUP BY 1,2,3,4;;
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 6 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=9 then 'Within 9 Months'
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 9 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=12 then 'Within 12 Months'
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 12 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=24 then 'Within 24 Months'
-              when ${TABLE}.prev_processed_at is null then 'Cohort Population'
          else null end;;
 
   }
@@ -117,7 +116,6 @@ GROUP BY 1,2,3,4;;
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 6 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=9 then 4
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 9 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=12 then 5
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 12 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=24 then 6
-              when ${TABLE}.prev_processed_at is null then 1
 
          else null end;;
   }
