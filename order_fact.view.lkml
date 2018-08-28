@@ -6,7 +6,9 @@ view: order_fact {
 
     sql:
     SELECT   orders.order_id
-           , row_number() over (partition by customer_id order by processed_at) as order_index
+           , row_number() over (partition by customer_id order by processed_at) as order_index,
+          FIRST_VALUE(orders.processed_at) OVER (PARTITION BY customer_id ORDER BY orders.processed_at
+    rows between unbounded preceding and unbounded following) as first_order_processed_at
     FROM shopify.orders ;;
     # sortkeys: ["order_id"]
     # distribution: "order_id"
@@ -30,6 +32,22 @@ view: order_fact {
     sql: case when ${order_index} = 1 then 'new' else 'repeat' end ;;
     group_label: "Retention"
     }
+
+  dimension_group: first_order_processed_at  {
+    type: time
+    hidden: yes
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    }
+
+
 
 
   # # You can specify the table name if it's different from the view name:

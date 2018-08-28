@@ -107,6 +107,12 @@ view: orders {
     group_label: "Dates"
   }
 
+  dimension: months_since_first_purchase {
+    type: number
+    sql: DATEDIFF(month,${order_fact.first_order_processed_at_date},${TABLE}.processed_at) ;;
+    group_label: "Retention"
+  }
+
   dimension_group: canceled {
     type: time
     timeframes: [
