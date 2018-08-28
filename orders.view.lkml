@@ -96,6 +96,7 @@ view: orders {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,

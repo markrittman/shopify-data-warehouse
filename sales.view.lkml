@@ -327,6 +327,13 @@ view: sales {
     value_format_name: usd
   }
 
+  dimension: net_sales_with_returns_fx {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.net_sales_fx - ${TABLE}.returns_fx ;;
+    value_format_name: usd
+  }
+
   dimension: returns {
     hidden: yes
     type: number
@@ -578,6 +585,13 @@ view: sales {
     group_label: "FX"
   }
 
+  measure: net_sales_with_returns_total_fx {
+    type: sum
+    sql: ${TABLE}.net_sales_fx - ${TABLE}.returns_fx;;
+    value_format_name: usd
+    group_label: "FX"
+  }
+
   measure: returns_total_fx {
     type: sum
     sql: ${TABLE}.returns_fx ;;
@@ -616,7 +630,7 @@ view: sales {
 
   measure: total_no_tax_total_fx {
     type: sum
-    sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_fx;;
+    sql: ${TABLE}.net_sales_fx - ${TABLE}.returns_fx + ${TABLE}.shipping_fx;;
     value_format_name: usd
     group_label: "FX"
     drill_fields: [revenue_drill_fields*]
