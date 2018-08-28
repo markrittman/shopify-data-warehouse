@@ -54,6 +54,12 @@ explore: sales {
     relationship: many_to_one
   }
 
+  join: products_aux {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${products.product_id} = ${products_aux.product_id} ;;
+  }
+
   join: shops {
     sql_on:  ${sales.shop_id} = ${shops.shop_id} ;;
     type:  left_outer
@@ -158,6 +164,8 @@ explore: sales {
      sql_on: ${inventory_adjustments.product_id} = ${products.product_id};;
      fields: [products.product_type, products.title, products.vendor]
    }
+
+
 
    join: product_variants {
      type: inner
