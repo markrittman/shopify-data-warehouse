@@ -2,7 +2,7 @@ view: order_product_sku_fact {
   view_label: "Orders"
   derived_table: {
     persist_for: "24 hours"
-    indexes: ["order_id","customer_id","title"]
+    indexes: ["order_id","customer_id","title","processed_at"]
     distribution_style: "all"
 
     sql:
