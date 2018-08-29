@@ -2,7 +2,7 @@
 
 view: products {
 
-  sql_table_name: shopify.products ;;
+  sql_table_name: colourpop_data.products_custom ;;
 
   # IDs -------------------------------------------------------------------
 

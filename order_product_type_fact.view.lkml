@@ -17,7 +17,7 @@ view: order_product_type_fact {
     rows between unbounded preceding and unbounded following) as first_type_order_processed_at
 FROM shopify.sales  AS sales
 INNER JOIN shopify.orders  AS orders ON sales.order_id = orders.order_id
-LEFT JOIN shopify.products  AS products ON sales.product_id = products.product_id
+LEFT JOIN colourpop_data.products_custom  AS products ON sales.product_id = products.product_id
 LEFT JOIN shopify.customers  AS customers ON orders.customer_id = customers.customer_id
 WHERE (NOT COALESCE(sales.is_deleted , FALSE)) AND (NOT COALESCE(sales.test , FALSE))
 GROUP BY 1,2,3,4;;
