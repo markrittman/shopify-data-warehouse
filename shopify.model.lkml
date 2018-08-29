@@ -25,7 +25,6 @@ explore: sales {
     }
   }
 
-  sql_always_where: {% condition sales.date_filter %} sales.happened_at {% endcondition %} ;;
 
 
   join: orders {
@@ -77,6 +76,11 @@ explore: sales {
     type:  left_outer
     relationship: many_to_one
   }
+  join: customer_lifetime_spend {
+    sql_on: ${customers.customer_id} = ${customer_lifetime_spend.customer_id} ;;
+    type:  left_outer
+    relationship: many_to_one
+  }
 
   join: cohort_size {
     sql_on: ${customer_cohort.processed_month} = ${cohort_size.processed_month} ;;
@@ -116,6 +120,12 @@ explore: sales {
 
   join: order_product_type_fact {
     sql_on: ${orders.order_id} = ${order_product_type_fact.order_id} AND ${products.product_type} = ${order_product_type_fact.product_type};;
+    type: left_outer
+    relationship: one_to_one
+  }
+
+  join: order_product_collab_fact {
+    sql_on: ${orders.order_id} = ${order_product_collab_fact.order_id} AND ${products_aux.product_collab} = ${order_product_collab_fact.product_collab};;
     type: left_outer
     relationship: one_to_one
   }

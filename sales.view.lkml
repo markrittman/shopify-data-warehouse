@@ -13,109 +13,9 @@ view: sales {
 # These parameters appear as Filter Only Fields in an explore and are referenced later in the view by the
 # period dimension (date_part parameter) and primary_metric (primary_metric_name parameter), and in the sales explore (date_filter)
 
-  parameter: primary_metric_name {
-    type: unquoted
-    default_value: "total_no_tax_total_fx"
-    allowed_value: {
-      label: "Total (No Tax) Sales FX"
-      value: "total_no_tax_total_fx"
-    }
-    allowed_value: {
-      label: "Net Sales FX"
-      value: "net_sales_fx"
-    }
-    allowed_value: {
-      label: "Gross Sales FX"
-      value: "gross_sales_fx"
-    }
-    allowed_value: {
-      label: "Gift Cards Issued Fx"
-      value: "gift_cards_issued_fx"
-    }
-    allowed_value: {
-      label: "Gift Card Gross Sales FX"
-      value: "gift_card_gross_sales_fx"
-    }
-    allowed_value: {
-      label: "Discounts FX"
-      value: "discounts_fx"
-    }
-  }
 
-    parameter: date_part {
-      type: string
-      label: "Time Granularity"
-      default_value: "month"
-      allowed_value: {
-        value: "day"
-      }
-      allowed_value: {
-        value: "week"
-      }
-      allowed_value: {
-        value: "month"
-      }
-      allowed_value: {
-        value: "quarter"
-      }
-      allowed_value: {
-        value: "year"
-      }
-    }
 
-  parameter: date_filter {
-    type: date_time
-    label: "Date Range"
-    default_value: "Last 3 Month"
-    allowed_value: {
-      label: "Current Week"
-      value: "This Week"
-    }
-    allowed_value: {
-      label: "1 Week"
-      value: "Last Week"
-    }
-    allowed_value: {
-      label: "2 Weeks"
-      value: "Last 2 Week"
-    }
-    allowed_value: {
-      label: "4 Weeks"
-      value: "Last 4 Week"
-    }
-    allowed_value: {
-      label: "Current Month"
-      value: "This Month"
-    }
-    allowed_value: {
-      label: "1 Month"
-      value: "Last Month"
-    }
-    allowed_value: {
-      label: "3 Months"
-      value: "Last 3 Month"
-    }
-    allowed_value: {
-      label: "6 Months"
-      value: "Last 6 Month"
-    }
-    allowed_value: {
-      label: "Current Qtr"
-      value: "This Quarter"
-    }
-    allowed_value: {
-      label: "1 Qtr"
-      value: "Last Quarter"
-    }
-    allowed_value: {
-      label: "2 Qtrs"
-      value: "Last 2 Quarter"
-    }
-    allowed_value: {
-      label: "YTD"
-      value: "This Year"
-    }
-  }
+
 
   # IDs -------------------------------------------------------------------
 
@@ -201,6 +101,7 @@ view: sales {
 
   dimension_group: happened {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -217,22 +118,7 @@ view: sales {
   # Dimension that goes with the "date_part" parameter, that when added to a look that uses this parameter alters the time
   # granularity of the report to subtotal metrics by day, month, week, quarter or year
 
-  dimension: period {
-    label_from_parameter : date_part
-    sql: {% if date_part._parameter_value == "'day'" %}
-         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY-MM-DD')
-         {% elsif date_part._parameter_value == "'month'" %}
-         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY-MM')
-         {% elsif date_part._parameter_value == "'week'" %}
-         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY-WW')
-        {% elsif date_part._parameter_value == "'quarter'" %}
-         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY-Q')
-        {% elsif date_part._parameter_value == "'year'" %}
-         to_char(DATE_TRUNC({% parameter date_part %}, CONVERT_TIMEZONE('UTC', 'US/Pacific', ${happened_date})),'YYYY')
-         {% else %}
-    NULL
-    {% endif %} ;;
-  }
+
 
 
   # Money -------------------------------------------------------------------
@@ -589,6 +475,7 @@ view: sales {
     type: sum
     sql: ${TABLE}.net_sales_fx - ${TABLE}.returns_fx;;
     value_format_name: usd
+    label: "Net Sales (Minus Returns)"
     group_label: "FX"
   }
 
@@ -667,15 +554,7 @@ view: sales {
   # Dynamic measure used in conjunction with the primary_metric_name parameter to allow the user to
   # switch the measure used in a look or tile
 
-  measure: primary_metric {
-    sql: {% parameter primary_metric_name %};;
-    group_label: "FX"
 
-    type: sum
-    value_format_name: usd
-    drill_fields: [revenue_drill_fields*]
-    label_from_parameter: primary_metric_name
-  }
 
 
 

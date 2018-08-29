@@ -11,7 +11,7 @@ view: customers {
 
   dimension: customer_id {
     primary_key: yes
-    hidden: yes
+    hidden: no
     type: number
     sql: ${TABLE}.customer_id ;;
   }
@@ -178,6 +178,8 @@ view: customers {
   # Predictions -------------------------------------------------------------------
 
   dimension: expected_purchase_value_in_next_30_days_amt {
+    group_label: "Predictive Measures"
+
     type: number
     sql: ${TABLE}.expected_purchase_value_in_next_30_days ;;
     value_format_name: local_currency
@@ -185,12 +187,16 @@ view: customers {
   }
 
   dimension: predicted_average_number_of_days_between_orders_amt {
+    group_label: "Predictive Measures"
+
     type: number
     sql: ${TABLE}.predicted_average_number_of_days_between_orders ;;
     hidden: yes
   }
 
   dimension: probability_of_returning_amt {
+    group_label: "Predictive Measures"
+
     type: number
     sql: ${TABLE}.probability_of_returning ;;
     hidden: yes
@@ -204,24 +210,31 @@ view: customers {
   }
 
   measure: total_expected_purchase_value_in_next_30_days {
+    group_label: "Predictive Measures"
     type: sum
     sql: ${expected_purchase_value_in_next_30_days_amt} ;;
     value_format_name: usd
   }
 
   measure: average_expected_purchase_value_in_next_30_days {
+    group_label: "Predictive Measures"
+
     type: average
     sql: ${expected_purchase_value_in_next_30_days_amt} ;;
     value_format_name: usd
   }
 
   measure: probability_of_returning {
+    group_label: "Predictive Measures"
+
     type: average
     sql: ${probability_of_returning_amt} ;;
     value_format_name: percent_1
   }
 
   measure: predicted_average_number_of_days_between_orders {
+    group_label: "Predictive Measures"
+
     type: average
     sql: ${predicted_average_number_of_days_between_orders_amt} ;;
     value_format_name: decimal_1

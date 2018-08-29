@@ -12,7 +12,7 @@ view: products_aux {
     group_label: "PIM Dimensions"
 
     type: string
-    sql: ${TABLE}.product_collab ;;
+    sql: case when ${TABLE}.product_collab is null then 'No Collab' when trim(products_aux.product_collab) = '' then 'No Collab' else ${TABLE}.product_collab end ;;
   }
 
   dimension: product_finish {

@@ -113,42 +113,14 @@ view: orders {
     group_label: "Retention"
   }
 
-  dimension_group: canceled {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.canceled_at ;;
-    group_label: "Dates"
-  }
 
-  dimension_group: deleted {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.deleted_at ;;
-    group_label: "Dates"
-  }
+
+
 
   dimension_group: cohort {
     type: time
     timeframes: [
-      month,
-      quarter,
-      year
+      month
     ]
     sql: ${TABLE}.cohort ;;
     group_label: "Dates"
