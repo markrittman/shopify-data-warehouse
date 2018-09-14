@@ -551,6 +551,13 @@ view: sales {
 
   }
 
+  measure: quantity_pct_total {
+    type: percent_of_total
+    sql: ${TABLE}.quantity ;;
+    group_label: "Counts"
+
+  }
+
   # Dynamic measure used in conjunction with the primary_metric_name parameter to allow the user to
   # switch the measure used in a look or tile
 

@@ -25,9 +25,11 @@ view: cohort_size {
     }
   }
   dimension: processed_month {
+    hidden: yes
   }
   dimension: count_customers {
     label: "Cohort Size"
+    hidden: yes
     group_label: "Category"
     type: number
   }

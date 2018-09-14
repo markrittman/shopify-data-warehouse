@@ -50,13 +50,12 @@ view: customer_reseller_status {
 
 
   dimension: is_reseller {
-    group_label: "Category"
     type: number
   }
 
 
   dimension: summary_segment {
-    group_label: "Category"
+    label: "Customer Segment"
     type: string
     drill_fields: [revenue_drill_fields*]
   }

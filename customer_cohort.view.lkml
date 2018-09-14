@@ -61,26 +61,27 @@ view: customer_cohort {
   }
   dimension: processed_month {
 
-    label: "Cohort Month"
-    group_label: "Category"
+    label: "First Order Month"
 
   }
   dimension: country {
 
     label: "Default Country"
-    group_label: "Category"
 
   }
 
   dimension: zone {
 
     label: "Default Zone"
+    hidden: yes
     group_label: "Category"
 
   }
   dimension: zone_name {
 
     label: "Default Zone Name"
+    hidden: yes
+
     group_label: "Category"
 
   }
