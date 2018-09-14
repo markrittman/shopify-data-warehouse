@@ -528,6 +528,7 @@ view: sales {
   # Counts -------------------------------------------------------------------
 
   measure: order_items {
+    label: "Line Items"
     type: count
     group_label: "Counts"
   }
@@ -539,6 +540,7 @@ view: sales {
   }
 
   measure: customers {
+    hidden: yes
     type: count_distinct
     sql: ${customer_id} ;;
     group_label: "Counts"
@@ -553,6 +555,7 @@ view: sales {
 
   measure: quantity_pct_total {
     type: percent_of_total
+    hidden: yes
     sql: ${TABLE}.quantity ;;
     group_label: "Counts"
 

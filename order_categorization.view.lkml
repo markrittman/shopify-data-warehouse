@@ -92,6 +92,7 @@ view: order_categorization {
               when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 'Core Asia Beauty Enthusiast'
               else 'Core Intl Beauty Enthusiast' end ;;
     group_label: "Category"
+    label: "Customer Segment"
     drill_fields: [customer_details*]
 
   }

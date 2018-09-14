@@ -51,7 +51,7 @@ GROUP BY 1,2,3,4;;
   dimension: product_type_order_index {
     group_label: "Retention"
 
-    label: "Type Order Index"
+    label: "Product Type Order Index"
     type: number
     sql: ${TABLE}.product_type_order_index ;;
   }
@@ -60,7 +60,7 @@ GROUP BY 1,2,3,4;;
 
 
   dimension: type_new_vs_repeat {
-    label: "Type New vs Repeat"
+    label: "Product Type New vs Repeat"
     type: string
     sql: case when ${product_type_order_index} = 1 then 'new' else 'repeat' end ;;
     group_label: "Retention"
@@ -68,6 +68,7 @@ GROUP BY 1,2,3,4;;
 
   measure: days_since_last_type_order {
     type: average
+    label: "Days Since Last Product Type Order"
     value_format: "0"
     sql: DATEDIFF(day,${TABLE}.prev_processed_at,${TABLE}.processed_at) ;;
     group_label: "Retention"
@@ -76,7 +77,7 @@ GROUP BY 1,2,3,4;;
 
   dimension_group: first_type_order_processed_at {
     group_label: "Dates"
-    label: "First Type Purchase"
+    label: "First Product Type Purchase"
     type: time
     timeframes: [
       raw,
@@ -91,6 +92,7 @@ GROUP BY 1,2,3,4;;
 
   dimension: months_to_repeat_type {
     group_label: "Retention"
+    label: "Months to Repeat First Product Type Purchase"
     type: string
     order_by_field:  months_to_repeat_type_sort_order
     sql: case when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=1 then 'Within 1 Month'

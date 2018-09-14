@@ -49,19 +49,21 @@ GROUP BY 1,2,3,4;;
 
   dimension: product_title_order_index {
     group_label: "Retention"
-    label: "Title Order Index"
+    label: "Product Title Order Index"
     type: number
     sql: ${TABLE}.product_title_order_index ;;
   }
 
   dimension: title_new_vs_repeat {
-    label: "Title New vs Repeat"
+    label: "Product Title New vs Repeat"
     type: string
     sql: case when ${product_title_order_index} = 1 then 'new' else 'repeat' end ;;
     group_label: "Retention"
     }
 
   measure: days_since_last_title_order {
+    label: "Days Since Last Product Title Order"
+
     type: average
     value_format: "0"
     sql: DATEDIFF(day,${TABLE}.prev_processed_at,${TABLE}.processed_at) ;;
