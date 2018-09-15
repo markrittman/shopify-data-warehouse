@@ -110,7 +110,7 @@ view: orders {
   dimension: months_since_first_purchase {
     type: number
     sql: DATEDIFF(month,${order_fact.first_order_processed_at_date},${TABLE}.processed_at) ;;
-    group_label: "Retention"
+    group_label: "Repurchases"
   }
 
 
@@ -166,19 +166,20 @@ view: orders {
 
   dimension: name {
     type: string
+    label: "Order Name"
     sql: ${TABLE}.name ;;
     group_label: "Other"
   }
 
   dimension: test {
     type: yesno
+    hidden: yes
     sql: ${TABLE}.test ;;
     group_label: "Other"
   }
 
   dimension: discount_code {
     sql: ${TABLE}.discount_code ;;
-    group_label: "Other"
   }
 
 ###### These were moved into the order_fact table that we built ######
@@ -200,11 +201,13 @@ view: orders {
 
   measure: count {
     type: count
+    label: "Orders Count"
     group_label: "Counts"
   }
 
   measure: count_customers {
     type: count_distinct
+    hidden: yes
     sql: ${TABLE}.customer_id ;;
     group_label: "Counts"
 

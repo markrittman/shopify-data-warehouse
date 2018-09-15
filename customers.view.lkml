@@ -98,6 +98,8 @@ view: customers {
 
   dimension_group: first_order {
     type: time
+    group_label: "Dates"
+
     hidden: yes
     timeframes: [
       raw,
@@ -114,6 +116,7 @@ view: customers {
 
   dimension_group: last_order {
     type: time
+    group_label: "Dates"
     timeframes: [
       date,
       month

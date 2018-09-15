@@ -92,6 +92,7 @@ view: order_categorization {
               when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 'Core Asia Beauty Enthusiast'
               else 'Core Intl Beauty Enthusiast' end ;;
     group_label: "Category"
+    description: "Reseller orders defined as `any order containing line items with quantity > 4'"
     label: "Customer Segment"
     drill_fields: [customer_details*]
 

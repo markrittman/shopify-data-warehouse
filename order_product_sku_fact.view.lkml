@@ -48,7 +48,7 @@ GROUP BY 1,2,3,4;;
   }
 
   dimension: product_title_order_index {
-    group_label: "Retention"
+    group_label: "Repurchases"
     label: "Product Title Order Index"
     type: number
     sql: ${TABLE}.product_title_order_index ;;
@@ -58,7 +58,7 @@ GROUP BY 1,2,3,4;;
     label: "Product Title New vs Repeat"
     type: string
     sql: case when ${product_title_order_index} = 1 then 'new' else 'repeat' end ;;
-    group_label: "Retention"
+    group_label: "Repurchases"
     }
 
   measure: days_since_last_title_order {
@@ -67,7 +67,7 @@ GROUP BY 1,2,3,4;;
     type: average
     value_format: "0"
     sql: DATEDIFF(day,${TABLE}.prev_processed_at,${TABLE}.processed_at) ;;
-    group_label: "Retention"
+    group_label: "Repurchases"
 
   }
 

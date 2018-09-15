@@ -53,8 +53,8 @@ explore: sales {
     relationship: many_to_one
   }
 
-  join: collab_from_tags {
-    sql_on:  ${products.product_id} = ${collab_from_tags.product_id} ;;
+  join: product_tags_pivot {
+    sql_on:  ${products.product_id} = ${product_tags_pivot.product_id} ;;
     type: left_outer
     relationship: many_to_one
   }
@@ -141,5 +141,3 @@ explore: sales {
     relationship: one_to_one
   }
   }
-
-

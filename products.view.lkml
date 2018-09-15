@@ -59,11 +59,14 @@ view: products {
   }
 
   dimension: title {
+    label: "Product Title"
     type: string
     sql: ${TABLE}.title ;;
   }
 
   dimension: vendor {
+    label: "Product Vendor"
+
     type: string
     sql: ${TABLE}.vendor ;;
   }

@@ -60,6 +60,8 @@ view: customer_cohort {
 
   }
   dimension: processed_month {
+    group_label: "Dates"
+
 
     label: "First Order Month"
 
