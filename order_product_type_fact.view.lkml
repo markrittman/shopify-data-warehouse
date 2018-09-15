@@ -14,7 +14,9 @@ view: order_product_type_fact {
   ROW_NUMBER() OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at) as product_type_order_index,
   LAG(orders.processed_at,1) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at) as prev_processed_at,
     FIRST_VALUE(orders.processed_at) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at
-    rows between unbounded preceding and unbounded following) as first_type_order_processed_at
+    rows between unbounded preceding and unbounded following) as first_type_order_processed_at,
+    FIRST_VALUE(products.product_type) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at
+    rows between unbounded preceding and unbounded following) as first_product_type_ordered
 FROM shopify.sales  AS sales
 INNER JOIN shopify.orders  AS orders ON sales.order_id = orders.order_id
 LEFT JOIN colourpop_data.products_custom  AS products ON sales.product_id = products.product_id
@@ -56,7 +58,10 @@ GROUP BY 1,2,3,4;;
     sql: ${TABLE}.product_type_order_index ;;
   }
 
-
+  dimension: first_product_type_ordered {
+    group_label: "Repurchases"
+    label: "First Product Type Ordered"
+  }
 
 
   dimension: type_new_vs_repeat {
