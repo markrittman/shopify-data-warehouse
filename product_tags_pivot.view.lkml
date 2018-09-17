@@ -1,72 +1,17 @@
 view: product_tags_pivot {
   view_label: "Products"
   derived_table: {
-    sql: select product_id,  (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'collab'
-                     and   t.product_id = p.product_id
-                     limit 1) as collab,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'color'
-                     and   t.product_id = p.product_id
-                     limit 1) as color,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'unitnumber'
-                     and   t.product_id = p.product_id
-                     limit 1) as unitnumber,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'productsize'
-                     and   t.product_id = p.product_id
-                     limit 1) as productsize,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'subcategory'
-                     and   t.product_id = p.product_id
-                     limit 1) as subcategory,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = '#.excluded'
-                     and   t.product_id = p.product_id
-                     limit 1) as excluded,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'GW'
-                     and   t.product_id = p.product_id
-                     limit 1) as GW,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'technology'
-                     and   t.product_id = p.product_id
-                     limit 1) as technology,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'productline'
-                     and   t.product_id = p.product_id
-                     limit 1) as productline,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = '#.hidden'
-                     and   t.product_id = p.product_id
-                     limit 1) as hidden,
-                      (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = '#.value'
-                     and   t.product_id = p.product_id
-                     limit 1) as value,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'category'
-                     and   t.product_id = p.product_id
-                     limit 1) as category,
-                     (select split_part(title,':',2)
-                     from shopify.product_tags t
-                     where split_part(title,':',1) = 'finish'
-                     and   t.product_id = p.product_id
-                     limit 1) as finish
-from shopify.product_tags p
+    sql: select product_id,
+        max(case when split_part(title,':',1) = 'collab' then split_part(title,':',2) end) as collab,
+        max(case when split_part(title,':',1) = 'color' then split_part(title,':',2) end) as color,
+       max(case when split_part(title,':',1) = 'unitnumber' then split_part(title,':',2) end) as unitnumber,
+      max(case when split_part(title,':',1) = 'productsize' then split_part(title,':',2) end) as productsize,
+      max(case when split_part(title,':',1) = 'subcategory' then split_part(title,':',2) end) as subcategory,
+      max(case when split_part(title,':',1) = 'technology' then split_part(title,':',2) end) as technology,
+      max(case when split_part(title,':',1) = 'category' then split_part(title,':',2) end) as category,
+      max(case when split_part(title,':',1) = 'finish' then split_part(title,':',2) end) as finish
+from shopify.product_tags
+group by product_id
  ;;
 
   persist_for: "24 hours"
@@ -126,17 +71,7 @@ from shopify.product_tags p
     sql: ${TABLE}.subcategory ;;
   }
 
-  dimension: excluded {
 
-    type: string
-    sql: ${TABLE}.excluded ;;
-  }
-
-  dimension: gw {
-   hidden: yes
-    type: string
-    sql: ${TABLE}.gw ;;
-  }
 
   dimension: technology {
     label: "Product Technology"
@@ -146,24 +81,7 @@ from shopify.product_tags p
     sql: ${TABLE}.technology ;;
   }
 
-  dimension: productline {
-    label: "Product Line"
 
-    type: string
-    sql: ${TABLE}.productline ;;
-  }
-
-  dimension: hidden {
-
-    type: string
-    sql: ${TABLE}.hidden ;;
-  }
-
-  dimension: value {
-
-    type: string
-    sql: ${TABLE}.value ;;
-  }
 
   dimension: category {
     label: "Product Category"
@@ -188,12 +106,7 @@ from shopify.product_tags p
       unitnumber,
       productsize,
       subcategory,
-      excluded,
-      gw,
       technology,
-      productline,
-      hidden,
-      value,
       category,
       finish
     ]

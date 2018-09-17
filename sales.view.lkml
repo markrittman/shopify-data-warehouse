@@ -48,7 +48,7 @@ view: sales {
   }
 
   dimension: line_item_id {
-    hidden: yes
+    hidden: no
     type: number
     sql: ${TABLE}.line_item_id ;;
     group_label: "IDs"

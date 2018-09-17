@@ -58,6 +58,8 @@ view: products {
     sql: ${TABLE}.product_type ;;
   }
 
+
+
   dimension: title {
     label: "Product Title"
     type: string
