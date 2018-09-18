@@ -32,7 +32,18 @@ explore: sales {
     type: inner
     relationship: many_to_one
   }
-
+  join: order_note_attributes {
+    view_label: "Orders"
+    sql_on:  ${orders.order_id} = ${order_note_attributes.order_id} ;;
+    type: left_outer
+    relationship: one_to_many
+  }
+  join: order_tags {
+    view_label: "Orders"
+    sql_on: ${orders.order_id} = ${order_tags.order_id} ;;
+    type: left_outer
+    relationship: one_to_many
+  }
   join: order_fact {
     view_label: "Orders"
     sql_on: ${orders.order_id} = ${order_fact.order_id} ;;
