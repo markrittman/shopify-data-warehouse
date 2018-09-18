@@ -13,10 +13,13 @@ view: order_product_type_fact {
   orders.processed_at,
   ROW_NUMBER() OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at) as product_type_order_index,
   LAG(orders.processed_at,1) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at) as prev_processed_at,
+  LEAD(orders.processed_at,1) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at) as next_processed_at,
     FIRST_VALUE(orders.processed_at) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at
     rows between unbounded preceding and unbounded following) as first_type_order_processed_at,
     FIRST_VALUE(products.product_type) OVER (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at
-    rows between unbounded preceding and unbounded following) as first_product_type_ordered
+    rows between unbounded preceding and unbounded following) as first_product_type_ordered,
+    COUNT(orders.order_id) over (PARTITION BY customers.customer_id,products.product_type ORDER BY orders.processed_at
+    rows between unbounded preceding and unbounded following) as total_order_count
 FROM shopify.sales  AS sales
 INNER JOIN shopify.orders  AS orders ON sales.order_id = orders.order_id
 LEFT JOIN colourpop_data.products_custom  AS products ON sales.product_id = products.product_id
@@ -69,7 +72,7 @@ GROUP BY 1,2,3,4;;
     type: string
     sql: case when ${product_type_order_index} = 1 then 'new' else 'repeat' end ;;
     group_label: "Repurchases"
-    }
+  }
 
   measure: days_since_last_type_order {
     type: average
@@ -80,20 +83,90 @@ GROUP BY 1,2,3,4;;
 
   }
 
+  measure: days_to_next_type_order {
+    type: average
+    label: "Days To Next Product Type Order"
+    value_format: "0"
+    sql: DATEDIFF(day,${TABLE}.processed_at,${TABLE}.next_processed_at) ;;
+    group_label: "Repurchases"
+
+  }
+
+  measure: average_type_orders {
+    type: average
+    label: "Average Product Type Orders"
+    value_format: "0"
+    sql: ${TABLE}.total_order_count ;;
+    group_label: "Repurchases"
+  }
+
+  dimension: months_to_next_type_order_tier {
+    label: "Months To Next Product Type Order Tier"
+    group_label: "Repurchases"
+    case: {
+      when: {
+        sql: ${TABLE}.next_processed_at is null;;
+        label: "Never"
+      }
+      when: {
+        sql: DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) <= 2;;
+        label: "Within 2 Months"
+      }
+      when: {
+        sql:  DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) > 2 AND DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) <= 3;;
+        label: "Within 3 Months"
+      }
+      when: {
+        sql: DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) > 3 AND DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) <= 6;;
+        label: "Within 6 Months"
+      }
+      when: {
+        sql: DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) > 6 AND DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) <= 9;;
+        label: "Within 9 Months"
+      }
+      when: {
+        sql: DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) > 9 ;;
+        label: "Over 9 Months"
+      }
+      else:"Unknown"
+    }
+
+  }
+
+
+
   dimension_group: first_type_order_processed_at {
     group_label: "Dates"
     label: "First Product Type Purchase"
     type: time
     timeframes: [
-      raw,
-      time,
       date,
-      week,
-      month,
-      quarter,
-      year
+      month
     ]
   }
+
+  dimension_group: prev_processed_at {
+    group_label: "Dates"
+    label: "Previous Type Purchase At"
+    type: time
+    timeframes: [
+      date,
+      month
+    ]
+  }
+
+  dimension_group: next_processed_at {
+    group_label: "Dates"
+    label: "Next Type Purchase At"
+    type: time
+    timeframes: [
+      date,
+      month
+    ]
+  }
+
+
+
 
   dimension: months_to_repeat_type {
     group_label: "Repurchases"
@@ -109,58 +182,63 @@ GROUP BY 1,2,3,4;;
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 12 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=24 then 'Within 24 Months'
          else null end;;
 
-  }
+    }
 
 
 
-  dimension: months_to_repeat_type_sort_order {
-    group_label: "Retention"
 
-    type: number
-    hidden: yes
-    sql: case when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=3 then 2
+
+
+
+
+    dimension: months_to_repeat_type_sort_order {
+      group_label: "Retention"
+
+      type: number
+      hidden: yes
+      sql: case when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 0 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=3 then 2
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 3 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=6 then 3
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 6 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=9 then 4
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) > 9 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=12 then 5
               when DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) >= 12 AND DATEDIFF(month,${TABLE}.prev_processed_at,${TABLE}.processed_at) <=24 then 6
 
          else null end;;
+    }
+
+
+
+
+
+
+    # # You can specify the table name if it's different from the view name:
+    # sql_table_name: my_schema_name.tester ;;
+    #
+    # # Define your dimensions and measures here, like this:
+    # dimension: user_id {
+    #   description: "Unique ID for each user that has ordered"
+    #   type: number
+    #   sql: ${TABLE}.user_id ;;
+    # }
+    #
+    # dimension: lifetime_orders {
+    #   description: "The total number of orders for each user"
+    #   type: number
+    #   sql: ${TABLE}.lifetime_orders ;;
+    # }
+    #
+    # dimension_group: most_recent_purchase {
+    #   description: "The date when each user last ordered"
+    #   type: time
+    #   timeframes: [date, week, month, year]
+    #   sql: ${TABLE}.most_recent_purchase_at ;;
+    # }
+    #
+    # measure: total_lifetime_orders {
+    #   description: "Use this for counting lifetime orders across many users"
+    #   type: sum
+    #   sql: ${lifetime_orders} ;;
+    # }
   }
-
-
-
-
-
-
-  # # You can specify the table name if it's different from the view name:
-  # sql_table_name: my_schema_name.tester ;;
-  #
-  # # Define your dimensions and measures here, like this:
-  # dimension: user_id {
-  #   description: "Unique ID for each user that has ordered"
-  #   type: number
-  #   sql: ${TABLE}.user_id ;;
-  # }
-  #
-  # dimension: lifetime_orders {
-  #   description: "The total number of orders for each user"
-  #   type: number
-  #   sql: ${TABLE}.lifetime_orders ;;
-  # }
-  #
-  # dimension_group: most_recent_purchase {
-  #   description: "The date when each user last ordered"
-  #   type: time
-  #   timeframes: [date, week, month, year]
-  #   sql: ${TABLE}.most_recent_purchase_at ;;
-  # }
-  #
-  # measure: total_lifetime_orders {
-  #   description: "Use this for counting lifetime orders across many users"
-  #   type: sum
-  #   sql: ${lifetime_orders} ;;
-  # }
-}
 
 # view: order_fact {
 #   # Or, you could make this view a derived table, like this:
