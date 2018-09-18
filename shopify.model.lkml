@@ -1,7 +1,7 @@
 connection: "cp_shopify_data_warehouse"
 
 include: "*.view.lkml"
-include: "*.dashboard.lookml"
+
 
 named_value_format: local_currency {
   value_format: "$0.00"
@@ -64,10 +64,10 @@ explore: sales {
     relationship: many_to_one
   }
 
-  join: products_aux {
+  join: product_tags_pivot {
+    sql_on:  ${products.product_id} = ${product_tags_pivot.product_id} ;;
     type: left_outer
-    relationship: one_to_one
-    sql_on: ${products.product_id} = ${products_aux.product_id} ;;
+    relationship: many_to_one
   }
 
   join: shops {
@@ -135,11 +135,7 @@ explore: sales {
     relationship: one_to_one
   }
 
-  join: order_product_collab_fact {
-    sql_on: ${orders.order_id} = ${order_product_collab_fact.order_id} AND ${products_aux.product_collab} = ${order_product_collab_fact.product_collab};;
-    type: left_outer
-    relationship: one_to_one
-  }
+
 
   join: product_type_cohort_size {
     sql_on: ${products.product_type} = ${product_type_cohort_size.product_type};;
@@ -155,78 +151,4 @@ explore: sales {
     type: left_outer
     relationship: one_to_one
   }
-  }
-
-
-  explore: current_inventory {
-   label: "Current Inventory Levels"
-
-   join: products {
-     type: inner
-     relationship: many_to_one
-     sql_on: ${current_inventory.product_id} = ${products.product_id};;
-     fields: [products.product_type, products.title, products.vendor]
-   }
-
-   join: product_variants {
-     type: inner
-     relationship: many_to_one
-     sql_on: ${current_inventory.product_variant_id} = ${product_variants.product_variant_id} ;;
-     fields: [product_variants.sku, product_variants.title]
-  }
-}
-
-  explore: inventory_adjustments {
-   label: "Inventory Flows"
-
-   join: products {
-     type: inner
-     relationship: many_to_one
-     sql_on: ${inventory_adjustments.product_id} = ${products.product_id};;
-     fields: [products.product_type, products.title, products.vendor]
-   }
-
-
-
-   join: product_variants {
-     type: inner
-     relationship: many_to_one
-     sql_on: ${inventory_adjustments.product_variant_id} = ${product_variants.product_variant_id} ;;
-     fields: [product_variants.sku, product_variants.title]
-   }
-
-   join: api_clients {
-     type: left_outer
-     relationship: many_to_one
-     sql_on: ${inventory_adjustments.api_client_id} = ${api_clients.api_client_id} ;;
-   }
-
-   join: shops {
-     type: inner
-     relationship: many_to_one
-     sql_on: ${inventory_adjustments.shop_id} = ${shops.shop_id} ;;
-   }
-   join: users {
-     type: left_outer
-     relationship: many_to_one
-     sql_on: ${inventory_adjustments.user_id} = ${users.user_id} ;;
-   }
-  }
-
-
- explore: online_store_sessions {
-   join: shops {
-     sql_on: ${online_store_sessions.shop_id} = ${shops.shop_id} ;;
-     type: left_outer
-     relationship: many_to_one
-   }
- }
-
- explore: order_attribution_interactions {
-   join: orders {
-     sql_on: ${order_attribution_interactions.order_id} = ${orders.order_id} ;;
-     type: inner
-     relationship: many_to_one
-     fields: []
-   }
   }

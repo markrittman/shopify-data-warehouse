@@ -48,7 +48,7 @@ view: sales {
   }
 
   dimension: line_item_id {
-    hidden: yes
+    hidden: no
     type: number
     sql: ${TABLE}.line_item_id ;;
     group_label: "IDs"
@@ -278,12 +278,16 @@ view: sales {
 
   dimension: total_sales_fx {
     type: number
+    hidden: yes
+
     sql: ${TABLE}.total_sales_fx ;;
     value_format_name: usd
   }
 
   dimension: total_no_tax_sales_fx {
   type: number
+    hidden: yes
+
   sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_fx ;;
   value_format_name: usd
 }
@@ -308,12 +312,7 @@ view: sales {
     group_label: "Other"
   }
 
-  dimension: quantity_tier {
-    type: tier
-    tiers: [1,2,3,5,10,20,50,100,500]
-    sql: ${TABLE}.quantity ;;
-    group_label: "Other"
-  }
+
 
   dimension: test {
     type: yesno
@@ -322,18 +321,23 @@ view: sales {
   }
 
   dimension: customer_first_order_month {
+    hidden: yes
     type: string
     sql:  ${customers.customer_first_order_month} ;;
     group_label: "Other"
   }
 
   dimension: customer_first_order_quarter {
+    hidden: yes
+
     type: string
     sql:  ${customers.customer_first_order_quarter} ;;
     group_label: "Other"
   }
 
   dimension: months_from_start {
+    label: "Months from First Order"
+    hidden: yes
     type: number
     sql: datediff(month, ${customers.customer_first_order_month}, ${orders.processed_date}) ;;
     group_label: "Other"
@@ -437,89 +441,105 @@ view: sales {
 # FX -------------------------------------------------------------------
 
   measure: discounts_total_fx {
+    label: "Discounts"
     type: sum
     sql: ${TABLE}.discounts_fx ;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: gift_card_discounts_total_fx {
     type: sum
+    hidden: yes
     sql: ${TABLE}.gift_card_discounts_fx ;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: gift_card_gross_sales_total_fx {
+    hidden: yes
+
     type: sum
     sql: ${TABLE}.gift_card_gross_sales_fx ;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: gift_cards_issued_total_fx {
+    hidden: yes
+
     type: sum
     sql: ${TABLE}.gross_sales_fx ;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: net_sales_total_fx {
     type: sum
+    hidden: yes
+    label: "Net Sales"
     sql: ${TABLE}.net_sales_fx ;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: net_sales_with_returns_total_fx {
+    label: "Net Sales"
+    description: "Deducts returns from net sales total, to match Shopify reports"
     type: sum
     sql: ${TABLE}.net_sales_fx - ${TABLE}.returns_fx;;
     value_format_name: usd
-    label: "Net Sales (Minus Returns)"
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: returns_total_fx {
+    label: "Returns"
+    hidden: yes
     type: sum
     sql: ${TABLE}.returns_fx ;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: taxes_total_fx {
+    label: "Taxes"
     type: sum
     sql: ${TABLE}.taxes_fx ;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: shipping_total_fx {
+    label: "Shipping"
     type: sum
     sql: ${TABLE}.shipping_fx ;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: gross_sales_total_fx {
+    label: "Gross Sales"
     type: sum
     sql: ${TABLE}.gross_sales_fx ;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
     drill_fields: [revenue_drill_fields*]
   }
 
   measure: total_sales_total_fx {
+    label: "Total Sales"
     type: sum
     sql: ${TABLE}.net_sales_fx + ${TABLE}.shipping_fx + ${TABLE}.taxes_fx;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
   }
 
   measure: total_no_tax_total_fx {
+    label: "Total Sales (Less Tax)"
     type: sum
     sql: ${TABLE}.net_sales_fx - ${TABLE}.returns_fx + ${TABLE}.shipping_fx;;
     value_format_name: usd
-    group_label: "FX"
+    group_label: "Sales"
     drill_fields: [revenue_drill_fields*]
 
   }
@@ -528,17 +548,20 @@ view: sales {
   # Counts -------------------------------------------------------------------
 
   measure: order_items {
+    label: "Line Items"
     type: count
     group_label: "Counts"
   }
 
   measure: orders {
+    hidden: yes
     type: count_distinct
     sql: ${order_id} ;;
     group_label: "Counts"
   }
 
   measure: customers {
+    hidden: yes
     type: count_distinct
     sql: ${customer_id} ;;
     group_label: "Counts"
@@ -546,6 +569,14 @@ view: sales {
 
   measure: quantity {
     type: sum
+    sql: ${TABLE}.quantity ;;
+    group_label: "Counts"
+
+  }
+
+  measure: quantity_pct_total {
+    type: percent_of_total
+    hidden: yes
     sql: ${TABLE}.quantity ;;
     group_label: "Counts"
 

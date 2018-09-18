@@ -69,6 +69,7 @@ view: customers {
 
   dimension_group: created {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -97,6 +98,9 @@ view: customers {
 
   dimension_group: first_order {
     type: time
+    group_label: "Dates"
+
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -112,14 +116,10 @@ view: customers {
 
   dimension_group: last_order {
     type: time
+    group_label: "Dates"
     timeframes: [
-      raw,
-      time,
       date,
-      week,
-      month,
-      quarter,
-      year
+      month
     ]
     sql: ${TABLE}.last_order_date ;;
   }

@@ -23,6 +23,7 @@ view: products {
 
   dimension_group: created {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -36,6 +37,7 @@ view: products {
   }
 
   dimension_group: deleted {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -56,12 +58,17 @@ view: products {
     sql: ${TABLE}.product_type ;;
   }
 
+
+
   dimension: title {
+    label: "Product Title"
     type: string
     sql: ${TABLE}.title ;;
   }
 
   dimension: vendor {
+    label: "Product Vendor"
+
     type: string
     sql: ${TABLE}.vendor ;;
   }

@@ -50,13 +50,13 @@ view: customer_reseller_status {
 
 
   dimension: is_reseller {
-    group_label: "Category"
     type: number
   }
 
 
   dimension: summary_segment {
-    group_label: "Category"
+    label: "Customer Segment"
+    description: "Reseller customer defined as 'any customer with only a single order that is then defined as a reseller order, or any customer with more than two reseller orders in-total'"
     type: string
     drill_fields: [revenue_drill_fields*]
   }

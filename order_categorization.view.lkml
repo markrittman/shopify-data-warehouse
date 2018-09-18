@@ -1,8 +1,8 @@
 view: order_categorization {
  derived_table: {
-  persist_for: "24 hours"
-  indexes: ["order_id"]
-  distribution_style: "all"
+  #persist_for: "24 hours"
+  #indexes: ["order_id"]
+  #distribution_style: "all"
 
    sql: SELECT order_id, ba.country as country, MAX(quantity) as max_sku_quantity, count(*) as count_order_items
         FROM shopify.sales s
@@ -92,6 +92,8 @@ view: order_categorization {
               when ${TABLE}.country = 'Singapore' OR ${TABLE}.country = 'Hong Kong' OR ${TABLE}.country = 'China' OR ${TABLE}.country = 'Malaysia' then 'Core Asia Beauty Enthusiast'
               else 'Core Intl Beauty Enthusiast' end ;;
     group_label: "Category"
+    description: "Reseller orders defined as `any order containing line items with quantity > 4'"
+    label: "Customer Segment"
     drill_fields: [customer_details*]
 
   }

@@ -1,8 +1,8 @@
 view: order_fact {
   derived_table: {
-    persist_for: "24 hours"
-    indexes: ["order_id"]
-    distribution_style: "all"
+    #persist_for: "24 hours"
+    #indexes: ["order_id"]
+   # distribution_style: "all"
 
     sql:
     SELECT   orders.order_id
@@ -21,7 +21,7 @@ view: order_fact {
   }
 
   dimension: order_index {
-    group_label: "Retention"
+    group_label: "Repurchases"
 
     type: number
     sql: ${TABLE}.order_index ;;
@@ -30,7 +30,7 @@ view: order_fact {
   dimension: new_vs_repeat {
     type: string
     sql: case when ${order_index} = 1 then 'new' else 'repeat' end ;;
-    group_label: "Retention"
+    group_label: "Repurchases"
     }
 
   dimension_group: first_order_processed_at  {

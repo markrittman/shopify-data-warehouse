@@ -89,6 +89,7 @@ view: addresses {
 
   dimension: zone_name {
     type: string
+    hidden: yes
     order_by_field: zone
     sql: case
       when ${TABLE}.country = 'United States' then 'USA'
