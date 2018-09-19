@@ -92,13 +92,16 @@ GROUP BY 1,2,3,4;;
 
   }
 
-  measure: average_type_orders {
-    type: average
-    label: "Average Product Type Orders"
+  dimension: total_type_orders {
+    type: tier
+    tiers: [1,2,3,4,5,8,9]
+    style: integer
+    label: "Product Type Total Purchases Tier"
     value_format: "0"
     sql: ${TABLE}.total_order_count ;;
     group_label: "Repurchases"
   }
+
 
   dimension: months_to_next_type_order_tier {
     label: "Months To Next Product Type Order Tier"
@@ -137,7 +140,7 @@ GROUP BY 1,2,3,4;;
 
   dimension_group: first_type_order_processed_at {
     group_label: "Dates"
-    label: "First Product Type Purchase"
+    label: "Product Type Cohort"
     type: time
     timeframes: [
       date,

@@ -22,6 +22,7 @@ view: product_type_bucketed_orders {
     type: number
   }
   dimension: count {
+    hidden: yes
     label: "Total Purchases Group"
     type: tier
     tiers: [0,1,2,3,4,5,8,9]
@@ -29,6 +30,7 @@ view: product_type_bucketed_orders {
   }
 
   dimension: total_purchases_tier {
+    hidden: yes
     label: "Total Type Purchases Tier"
     group_label: "Repurchases"
     case: {

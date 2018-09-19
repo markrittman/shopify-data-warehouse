@@ -26,11 +26,13 @@ view: product_type_cohort_size {
   }
   measure: count {
     label: "Product Type Cohort Size"
+    hidden: yes
     group_label: "Repurchases"
     type: sum
   }
   dimension: first_type_order_processed_at_month {
     label: "Product Type Cohort"
+    hidden: yes
     group_label: "Repurchases"
 
   }
