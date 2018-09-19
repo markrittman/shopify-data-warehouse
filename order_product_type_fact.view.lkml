@@ -102,6 +102,14 @@ GROUP BY 1,2,3,4;;
     group_label: "Repurchases"
   }
 
+  measure: avg_product_type_orders {
+    type: average
+    label: "Average # Product Type Purchases"
+    value_format: "0.0"
+    sql: ${TABLE}.total_order_count ;;
+    group_label: "Repurchases"
+  }
+
 
   dimension: months_to_next_type_order_tier {
     label: "Months To Next Product Type Order Tier"
