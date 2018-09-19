@@ -1,4 +1,5 @@
 view: order_fact {
+  view_label: "Orders"
   derived_table: {
     #persist_for: "24 hours"
     #indexes: ["order_id"]
@@ -35,7 +36,8 @@ view: order_fact {
 
   dimension_group: first_order_processed_at  {
     type: time
-    hidden: yes
+    group_label: "Dates"
+    label: "First Purchase"
     timeframes: [
       raw,
       time,

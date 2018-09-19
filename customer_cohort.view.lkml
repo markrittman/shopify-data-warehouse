@@ -60,6 +60,7 @@ view: customer_cohort {
 
   }
   dimension: processed_month {
+    hidden: yes
     group_label: "Dates"
 
 
