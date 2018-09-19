@@ -16,13 +16,11 @@ view: order_categorization {
   set: sales_drilldown_set {
     fields: [
       customers.full_name,
+      customers.email,
+      billing_addresses.country,
+      shipping_addresses.country,
       products.product_type,
-      products.title,
-      products.vendor,
-      addresses.zone_name,
-      customer_default__billing_country_and_zone.default_billing_address_zone,
-      customer_default__billing_country_and_zone.default_billing_address_country,
-      customer_reseller_status.segment
+      products.title
     ]
   }
 
@@ -94,7 +92,7 @@ view: order_categorization {
     group_label: "Category"
     description: "Reseller orders defined as `any order containing line items with quantity > 4'"
     label: "Customer Segment"
-    drill_fields: [customer_details*]
+    drill_fields: [sales_drilldown_set*]
 
   }
 
