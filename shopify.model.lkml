@@ -1,7 +1,7 @@
 connection: "cp_shopify_data_warehouse"
 
 include: "*.view.lkml"
-
+include: "*.dashboard"
 
 named_value_format: local_currency {
   value_format: "$0.00"

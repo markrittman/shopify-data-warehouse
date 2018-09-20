@@ -134,7 +134,6 @@
     filters:
       sales.test: 'no'
       sales.is_deleted: 'no'
-      sales.date_filter: Last 3 Month
       order_categorization.summary_segment: Reseller
     sorts:
     - order_categorization.summary_segment desc 0
