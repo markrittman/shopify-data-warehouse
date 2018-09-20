@@ -9,7 +9,11 @@ view: order_fact {
     SELECT   orders.order_id
            , row_number() over (partition by customer_id order by processed_at) as order_index,
           FIRST_VALUE(orders.processed_at) OVER (PARTITION BY customer_id ORDER BY orders.processed_at
-    rows between unbounded preceding and unbounded following) as first_order_processed_at
+    rows between unbounded preceding and unbounded following) as first_order_processed_at,
+    LAG(orders.processed_at,1) OVER (PARTITION BY customers.customer_id ORDER BY orders.processed_at) as prev_processed_at,
+  LEAD(orders.processed_at,1) OVER (PARTITION BY customers.customer_id ORDER BY orders.processed_at) as next_processed_at,
+    COUNT(orders.order_id) over (PARTITION BY customers.customer_id ORDER BY orders.processed_at
+    rows between unbounded preceding and unbounded following) as total_order_count
     FROM shopify.orders ;;
     # sortkeys: ["order_id"]
     # distribution: "order_id"
@@ -48,6 +52,34 @@ view: order_fact {
       year
     ]
     }
+
+  dimension: total_orders {
+    type: tier
+    tiers: [1,2,3,4,5,8,10,20,50,100]
+    style: integer
+    label: "Total Purchases Tier"
+    value_format: "0"
+    sql: ${TABLE}.total_order_count ;;
+    group_label: "Repurchases"
+  }
+
+  measure: avg_orders {
+    type: average
+    label: "Average # Purchases"
+    value_format: "0.0"
+    sql: ${TABLE}.total_order_count ;;
+    group_label: "Repurchases"
+  }
+
+  dimension_group: next_processed_at {
+    group_label: "Dates"
+    label: "Next Purchase At"
+    type: time
+    timeframes: [
+      date,
+      month
+    ]
+  }
 
 
 
