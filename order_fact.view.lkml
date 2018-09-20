@@ -1,9 +1,9 @@
 view: order_fact {
   view_label: "Orders"
   derived_table: {
-    #persist_for: "24 hours"
-    #indexes: ["order_id"]
-   # distribution_style: "all"
+    persist_for: "24 hours"
+    indexes: ["order_id"]
+    distribution_style: "all"
 
     sql:
     SELECT   orders.order_id
