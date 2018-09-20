@@ -6,15 +6,17 @@ view: order_fact {
     distribution_style: "all"
 
     sql:
-    SELECT   orders.order_id
-           , row_number() over (partition by customer_id order by processed_at) as order_index,
-          FIRST_VALUE(orders.processed_at) OVER (PARTITION BY customer_id ORDER BY orders.processed_at
+    SELECT   orders.order_id,
+             customers.customer_id,
+           row_number() over (partition by customers.customer_id order by processed_at) as order_index,
+          FIRST_VALUE(orders.processed_at) OVER (PARTITION BY customers.customer_id ORDER BY orders.processed_at
     rows between unbounded preceding and unbounded following) as first_order_processed_at,
     LAG(orders.processed_at,1) OVER (PARTITION BY customers.customer_id ORDER BY orders.processed_at) as prev_processed_at,
   LEAD(orders.processed_at,1) OVER (PARTITION BY customers.customer_id ORDER BY orders.processed_at) as next_processed_at,
     COUNT(orders.order_id) over (PARTITION BY customers.customer_id ORDER BY orders.processed_at
     rows between unbounded preceding and unbounded following) as total_order_count
-    FROM shopify.orders ;;
+    FROM shopify.orders
+    LEFT JOIN shopify.customers  AS customers ON orders.customer_id = customers.customer_id;;
     # sortkeys: ["order_id"]
     # distribution: "order_id"
   }
@@ -23,6 +25,13 @@ view: order_fact {
     type: number
     hidden: yes
     sql: ${TABLE}.order_id ;;
+  }
+
+  dimension: pk{
+    type: string
+    primary_key: yes
+    hidden: yes
+    sql: concat(concat(${TABLE}.order_id,${TABLE}.customer_id),${TABLE}.order_index) ;;
   }
 
   dimension: order_index {
@@ -79,6 +88,39 @@ view: order_fact {
       date,
       month
     ]
+  }
+
+  dimension: months_to_next_purchase_tier {
+    label: "Months To Next Purchase Tier"
+    group_label: "Repurchases"
+    case: {
+      when: {
+        sql: ${TABLE}.next_processed_at is null;;
+        label: "Never"
+      }
+      when: {
+        sql: DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) <= 2;;
+        label: "Within 2 Months"
+      }
+      when: {
+        sql:  DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) > 2 AND DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) <= 3;;
+        label: "Within 3 Months"
+      }
+      when: {
+        sql: DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) > 3 AND DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) <= 6;;
+        label: "Within 6 Months"
+      }
+      when: {
+        sql: DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) > 6 AND DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) <= 9;;
+        label: "Within 9 Months"
+      }
+      when: {
+        sql: DATEDIFF(month,${TABLE}.processed_at,${TABLE}.next_processed_at) > 9 ;;
+        label: "Over 9 Months"
+      }
+      else:"Unknown"
+    }
+
   }
 
 
