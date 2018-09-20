@@ -12,9 +12,8 @@ view: order_fact {
           FIRST_VALUE(orders.processed_at) OVER (PARTITION BY customers.customer_id ORDER BY orders.processed_at
     rows between unbounded preceding and unbounded following) as first_order_processed_at,
     LAG(orders.processed_at,1) OVER (PARTITION BY customers.customer_id ORDER BY orders.processed_at) as prev_processed_at,
-  LEAD(orders.processed_at,1) OVER (PARTITION BY customers.customer_id ORDER BY orders.processed_at) as next_processed_at,
-    COUNT(orders.order_id) over (PARTITION BY customers.customer_id ORDER BY orders.processed_at
-    rows between unbounded preceding and unbounded following) as total_order_count
+  LEAD(orders.processed_at,1) OVER (PARTITION BY customers.customer_id ORDER BY orders.processed_at) as next_processed_at
+
     FROM shopify.orders
     LEFT JOIN shopify.customers  AS customers ON orders.customer_id = customers.customer_id;;
     # sortkeys: ["order_id"]
@@ -62,15 +61,7 @@ view: order_fact {
     ]
     }
 
-  dimension: total_orders {
-    type: tier
-    tiers: [1,2,3,4,5,8,10,20,50,100]
-    style: integer
-    label: "Total Purchases Tier"
-    value_format: "0"
-    sql: ${TABLE}.total_order_count ;;
-    group_label: "Repurchases"
-  }
+
 
   measure: avg_orders {
     type: average

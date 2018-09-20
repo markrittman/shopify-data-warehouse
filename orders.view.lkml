@@ -199,12 +199,12 @@ view: orders {
 
   dimension: total_orders_tier {
     type: tier
-    tiers: [1,2,3,4,5,9]
+    tiers: [1,2,3,4,5,8,10,20,50,100]
     style: integer
-    label: "# of Product Type Purchases Tier"
-    sql: ${TABLE}.total_orders ;;
+    label: "Total Purchases Tier"
+    value_format: "0"
+    sql: ${TABLE}.order_id ;;
     group_label: "Repurchases"
-
   }
 
   # Measures -------------------------------------------------------------------
@@ -215,12 +215,8 @@ view: orders {
     group_label: "Counts"
   }
 
-  measure: average_number_of_orders {
-    type: average_distinct
-    label: "Average Orders"
-    sql: ${TABLE}.order_id ;;
-    group_label: "Counts"
-    }
+
+
 
   measure: count_customers {
     type: count_distinct
@@ -229,6 +225,7 @@ view: orders {
     group_label: "Counts"
 
   }
+
 
   measure: avg_order_value {
     type: average

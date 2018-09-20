@@ -33,6 +33,12 @@ explore: sales {
     relationship: many_to_one
   }
 
+  join: orders_count {
+    sql_on: ${customers.customer_id} = ${orders_count.customer_id} ;;
+    type: left_outer
+    relationship: many_to_one
+  }
+
   join: order_fact {
     view_label: "Orders"
     sql_on: ${orders.order_id} = ${order_fact.order_id} ;;
@@ -70,6 +76,8 @@ explore: sales {
     type:  left_outer
     relationship: many_to_one
   }
+
+
 
   join: product_type_bucketed_orders {
     sql_on: ${orders.customer_id} = ${product_type_bucketed_orders.customer_id} ;;
