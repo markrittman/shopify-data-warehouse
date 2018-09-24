@@ -55,22 +55,19 @@ view: customer_cohort {
   dimension: processed_date {
     hidden: yes
   }
+
   dimension: processed_time {
     hidden: yes
-
   }
+
   dimension: processed_month {
     hidden: yes
     group_label: "Dates"
-
-
     label: "First Order Month"
-
   }
+
   dimension: country {
-
     label: "Default Country"
-
   }
 
   dimension: zone {
