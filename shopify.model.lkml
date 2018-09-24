@@ -79,12 +79,6 @@ explore: sales {
 
 
 
-  join: product_type_bucketed_orders {
-    sql_on: ${orders.customer_id} = ${product_type_bucketed_orders.customer_id} ;;
-    type:  left_outer
-    relationship: one_to_one
-
-  }
 
   join: customer_cohort {
     sql_on: ${orders.customer_id} = ${customer_cohort.customer_id} ;;
@@ -141,12 +135,7 @@ explore: sales {
 
 
 
-  join: product_type_cohort_size {
-    sql_on: ${products.product_type} = ${product_type_cohort_size.product_type}
-          and ${orders.processed_month} = ${product_type_cohort_size.first_type_order_processed_at_month};;
-    type: left_outer
-    relationship: one_to_many
-  }
+
 
 
 

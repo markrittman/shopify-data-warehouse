@@ -26,6 +26,7 @@ dimension: customer_id {
 
 measure: total_orders  {
   type: average
+  label: "Average # Orders"
   value_format: "0.00"
   group_label: "Counts"
 
