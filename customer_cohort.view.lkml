@@ -49,9 +49,9 @@ view: customer_cohort {
   dimension: order_id {
     label: "First Order Order ID"
     hidden: yes
-
     type: string
   }
+
   dimension: processed_date {
     hidden: yes
   }
@@ -77,19 +77,11 @@ view: customer_cohort {
     group_label: "Category"
 
   }
-  dimension: zone_name {
 
+  dimension: zone_name {
     label: "Default Zone Name"
     hidden: yes
-
     group_label: "Category"
-
   }
 
-
-  #dimension: country {}
-  #dimension: zone {
-  #  type: number
-  #}
-  #dimension: zone_name {}
 }
